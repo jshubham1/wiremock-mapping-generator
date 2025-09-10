@@ -1,0 +1,7 @@
+{
+  "code": "API_ERROR_CODE",
+  "message": "Example message for message",
+  "details": [
+    "example_string"
+  ]
+}

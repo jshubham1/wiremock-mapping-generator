@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "code": "NOT_FOUND",
+      "message": "The requested resource was not found",
+      "details": "Resource does not exist or has been removed"
+    }
+  ],
+  "timestamp": "2024-01-01T12:00:00Z",
+  "traceId": "6e09db22-e79b-46e5-9842-98f696346e55",
+  "status": 404,
+  "path": "Create a new product"
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "prod-123",
+    "name": "Wireless Headphones",
+    "category": "electronics",
+    "price": 99.99,
+    "stock": 25
+  },
+  {
+    "id": "prod-456",
+    "name": "Coffee Mug",
+    "category": "home",
+    "price": 15.99,
+    "stock": 100
+  }
+]

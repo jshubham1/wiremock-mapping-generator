@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "code": "UNAUTHORIZED",
+      "message": "Authentication credentials were not provided or are invalid",
+      "details": "Please provide a valid authorization token"
+    }
+  ],
+  "timestamp": "2024-01-01T12:00:00Z",
+  "traceId": "a6c2f712-387c-4cc6-9e2b-ac8561dd35fe",
+  "status": 401,
+  "path": "Delete product by ID"
+}

@@ -1,0 +1,236 @@
+{
+  "mappings": [
+    {
+      "id": "1224146a-911c-4d46-9354-e998fddfa72e",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/{productId}",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*happy_path.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/put_updateProduct_200_response.json"
+      },
+      "metadata": {
+        "scenario": "success",
+        "operation_id": "updateProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "cf203fb7-d051-4eb6-869d-d2ee188e6d98",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/{productId}",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*created_success.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "created",
+        "operation_id": "updateProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "09408089-05dc-42ad-a174-76bd3466a4b8",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/{productId}",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*unauthorized_access.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/put_updateProduct_401_error.json"
+      },
+      "metadata": {
+        "scenario": "unauthorized",
+        "operation_id": "updateProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "d451a39d-4676-4f8c-8dd0-3dd69c9d645b",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/{productId}",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*forbidden_access.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/put_updateProduct_403_error.json"
+      },
+      "metadata": {
+        "scenario": "forbidden",
+        "operation_id": "updateProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "6ee17856-077b-44d3-8d3c-b4d38b970b43",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/{productId}",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*not_found_error.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/put_updateProduct_404_error.json"
+      },
+      "metadata": {
+        "scenario": "not_found",
+        "operation_id": "updateProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "6a63dadb-c3f0-44c4-9da8-41d6e7ba59fb",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/{productId}",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*server_error.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/put_updateProduct_500_error.json"
+      },
+      "metadata": {
+        "scenario": "server_error",
+        "operation_id": "updateProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "d73044e6-a4ec-451b-9c39-04674b00df4d",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/{productId}",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*bad_gateway.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/put_updateProduct_502_error.json"
+      },
+      "metadata": {
+        "scenario": "bad_gateway",
+        "operation_id": "updateProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "adbf3c82-47a4-4c79-9809-14011ba9e0ba",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/products/{productId}",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*service_unavailable.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/put_updateProduct_503_error.json"
+      },
+      "metadata": {
+        "scenario": "service_unavailable",
+        "operation_id": "updateProduct",
+        "api_name": "products"
+      }
+    }
+  ]
+}

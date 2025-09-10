@@ -1,0 +1,70 @@
+# Generated WireMock files
+wiremock/mappings/*.json
+wiremock/__files/*.json
+
+# Keep directory structure
+!wiremock/mappings/.gitkeep
+!wiremock/__files/.gitkeep
+
+# Docker
+.env.local
+docker-compose.override.yml
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache
+
+# Environment variables (if containing sensitive data)
+.env.production
+.env.secrets
+
+# Backup files
+*.bak
+*.backup

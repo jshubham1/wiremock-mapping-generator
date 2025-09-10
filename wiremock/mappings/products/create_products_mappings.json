@@ -1,0 +1,236 @@
+{
+  "mappings": [
+    {
+      "id": "ecf6c593-4240-4980-90da-9fd12d314eda",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/products",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*happy_path.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "success",
+        "operation_id": "createProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "8e6f506d-63c6-4ac0-ba44-e9fbd65a150c",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/products",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*created_success.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/post_createProduct_201_response.json"
+      },
+      "metadata": {
+        "scenario": "created",
+        "operation_id": "createProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "6724f775-c106-45ff-8111-dc8e7acb73ce",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/products",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*unauthorized_access.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/post_createProduct_401_error.json"
+      },
+      "metadata": {
+        "scenario": "unauthorized",
+        "operation_id": "createProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "59f44a35-d113-48a2-b9bb-efa49fc45089",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/products",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*forbidden_access.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/post_createProduct_403_error.json"
+      },
+      "metadata": {
+        "scenario": "forbidden",
+        "operation_id": "createProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "08593fe5-9998-405c-a0f7-6c7af585c65f",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/products",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*not_found_error.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/post_createProduct_404_error.json"
+      },
+      "metadata": {
+        "scenario": "not_found",
+        "operation_id": "createProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "9a5ff98a-4c5f-492e-8c31-48a72a65500e",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/products",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*server_error.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/post_createProduct_500_error.json"
+      },
+      "metadata": {
+        "scenario": "server_error",
+        "operation_id": "createProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "2cec7708-4ea9-4f9c-9c8a-7230b93ce842",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/products",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*bad_gateway.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/post_createProduct_502_error.json"
+      },
+      "metadata": {
+        "scenario": "bad_gateway",
+        "operation_id": "createProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "8598a3ad-8162-4d70-8cfe-6873943c7212",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/products",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*service_unavailable.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/post_createProduct_503_error.json"
+      },
+      "metadata": {
+        "scenario": "service_unavailable",
+        "operation_id": "createProduct",
+        "api_name": "products"
+      }
+    }
+  ]
+}

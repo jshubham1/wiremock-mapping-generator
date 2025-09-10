@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "code": "FORBIDDEN",
+      "message": "You do not have permission to access this resource",
+      "details": "Insufficient privileges for this operation"
+    }
+  ],
+  "timestamp": "2024-01-01T12:00:00Z",
+  "traceId": "0e5f8444-35dc-4370-bc78-102b89507af7",
+  "status": 403,
+  "path": "Delete product by ID"
+}

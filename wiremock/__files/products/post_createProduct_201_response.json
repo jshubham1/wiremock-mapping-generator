@@ -1,0 +1,8 @@
+{
+  "id": "prod-789",
+  "name": "Smart Watch",
+  "category": "electronics",
+  "price": 299.99,
+  "stock": 50,
+  "createdAt": "2024-01-01T12:00:00Z"
+}

@@ -1,0 +1,324 @@
+openapi: 3.0.0
+info:
+  title: Products API
+  description: API for managing products in the e-commerce system
+  version: 1.0.0
+  contact:
+    name: API Team
+    email: api@company.com
+
+servers:
+  - url: https://api.company.com/v1
+    description: Production server
+
+paths:
+  /products:
+    get:
+      operationId: getProducts
+      summary: Get all products
+      description: Retrieve a list of all products
+      parameters:
+        - name: limit
+          in: query
+          description: Number of products to return
+          schema:
+            type: integer
+            default: 10
+        - name: category
+          in: query
+          description: Filter by category
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+              example:
+                - id: "prod-123"
+                  name: "Wireless Headphones"
+                  category: "electronics"
+                  price: 99.99
+                  stock: 25
+                - id: "prod-456"
+                  name: "Coffee Mug"
+                  category: "home"
+                  price: 15.99
+                  stock: 100
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      operationId: createProduct
+      summary: Create a new product
+      description: Add a new product to the catalog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRequest'
+            example:
+              name: "Smart Watch"
+              category: "electronics"
+              price: 299.99
+              stock: 50
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example:
+                id: "prod-789"
+                name: "Smart Watch"
+                category: "electronics"
+                price: 299.99
+                stock: 50
+                createdAt: "2024-01-01T12:00:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /products/{productId}:
+    get:
+      operationId: getProductById
+      summary: Get product by ID
+      description: Retrieve a specific product by its ID
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The product ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example:
+                id: "prod-123"
+                name: "Wireless Headphones"
+                category: "electronics"
+                price: 99.99
+                stock: 25
+                createdAt: "2024-01-01T10:00:00Z"
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      operationId: updateProduct
+      summary: Update product
+      description: Update an existing product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The product ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRequest'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      operationId: deleteProduct
+      summary: Delete product
+      description: Remove a product from the catalog
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The product ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Product deleted successfully"
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique product identifier
+        name:
+          type: string
+          description: Product name
+        category:
+          type: string
+          description: Product category
+        price:
+          type: number
+          format: float
+          description: Product price
+        stock:
+          type: integer
+          description: Available stock quantity
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+
+    ProductRequest:
+      type: object
+      required:
+        - name
+        - category
+        - price
+        - stock
+      properties:
+        name:
+          type: string
+          description: Product name
+        category:
+          type: string
+          description: Product category
+        price:
+          type: number
+          format: float
+          description: Product price
+        stock:
+          type: integer
+          description: Available stock quantity
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    message:
+                      type: string
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: "UNAUTHORIZED"
+                    message:
+                      type: string
+                      example: "Authentication required"
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: "FORBIDDEN"
+                    message:
+                      type: string
+                      example: "Access denied"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: "NOT_FOUND"
+                    message:
+                      type: string
+                      example: "Resource not found"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: "INTERNAL_ERROR"
+                    message:
+                      type: string
+                      example: "Internal server error"

@@ -1,0 +1,217 @@
+{
+  "mappings": [
+    {
+      "id": "43071e7a-18c0-44ea-8f08-be60c3ada64d",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/users/{userId}",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/delete_deleteUser_200_response.json"
+      },
+      "metadata": {
+        "scenario": "success",
+        "operation_id": "deleteUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "38a059e6-4ff7-41e3-97c4-6af0f410e42c",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/users/{userId}",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "created_success"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "created",
+        "operation_id": "deleteUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "351fd243-8006-490e-ab7b-5b037ff6ad8b",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/users/{userId}",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "unauthorized_access"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/delete_deleteUser_401_error.json"
+      },
+      "metadata": {
+        "scenario": "unauthorized",
+        "operation_id": "deleteUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "c441624c-6903-4c91-be92-5183accf20f0",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/users/{userId}",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "forbidden_access"
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/delete_deleteUser_403_error.json"
+      },
+      "metadata": {
+        "scenario": "forbidden",
+        "operation_id": "deleteUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "84e43a39-b358-4feb-9750-3df72667f470",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/users/{userId}",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "not_found_error"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/delete_deleteUser_404_error.json"
+      },
+      "metadata": {
+        "scenario": "not_found",
+        "operation_id": "deleteUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "b1ecc82c-251b-4742-b898-97444f81173a",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/users/{userId}",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "server_error"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/delete_deleteUser_500_error.json"
+      },
+      "metadata": {
+        "scenario": "server_error",
+        "operation_id": "deleteUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "c095254d-e546-42f6-91fd-6f3b5b28529c",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/users/{userId}",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "bad_gateway"
+          }
+        }
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/delete_deleteUser_502_error.json"
+      },
+      "metadata": {
+        "scenario": "bad_gateway",
+        "operation_id": "deleteUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "f6d6fa31-ed67-4e22-b49e-e7606c4b1e16",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/users/{userId}",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "service_unavailable"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/delete_deleteUser_503_error.json"
+      },
+      "metadata": {
+        "scenario": "service_unavailable",
+        "operation_id": "deleteUser",
+        "api_name": "users"
+      }
+    }
+  ]
+}

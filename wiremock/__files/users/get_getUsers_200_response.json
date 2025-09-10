@@ -1,0 +1,26 @@
+{
+  "users": [
+    {
+      "id": "user-001",
+      "username": "john.doe",
+      "email": "john.doe@example.com",
+      "role": "admin",
+      "active": true,
+      "createdAt": "2024-01-01T10:00:00Z"
+    },
+    {
+      "id": "user-002",
+      "username": "jane.smith",
+      "email": "jane.smith@example.com",
+      "role": "user",
+      "active": true,
+      "createdAt": "2024-01-02T11:00:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 100,
+    "totalPages": 5
+  }
+}
