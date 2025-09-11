@@ -7,7 +7,7 @@
     }
   ],
   "timestamp": "2024-01-01T12:00:00Z",
-  "traceId": "336366ea-03c6-4410-86b6-320e4c0c70f8",
+  "traceId": "dc9aa9d6-2fb0-40b3-b7ad-32326826e368",
   "status": 503,
   "path": "Get user by ID"
 }

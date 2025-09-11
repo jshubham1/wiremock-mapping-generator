@@ -1,7 +1,7 @@
 {
   "mappings": [
     {
-      "id": "92215481-77b2-4794-9ce5-22847da0f1a8",
+      "id": "e76896db-4839-4e33-9c90-cd64648e0dc4",
       "request": {
         "method": "PUT",
         "urlPathPattern": "/users/{userId}",
@@ -30,7 +30,7 @@
       }
     },
     {
-      "id": "815be35f-2c89-4a2e-a043-bfaeffe5cc77",
+      "id": "5d255f70-4a58-43fa-8843-9a1f93519ffa",
       "request": {
         "method": "PUT",
         "urlPathPattern": "/users/{userId}",
@@ -59,7 +59,7 @@
       }
     },
     {
-      "id": "a32be5fa-2d37-4cd5-860a-3fe10e8d127c",
+      "id": "54d6b772-186c-45c8-ae6e-fe0c31a51d5e",
       "request": {
         "method": "PUT",
         "urlPathPattern": "/users/{userId}",
@@ -88,7 +88,7 @@
       }
     },
     {
-      "id": "73f703e8-1dac-4ad0-b611-aae824e2a0fe",
+      "id": "fdc05cc3-7aa8-403c-b276-5585a8acda59",
       "request": {
         "method": "PUT",
         "urlPathPattern": "/users/{userId}",
@@ -117,7 +117,7 @@
       }
     },
     {
-      "id": "e037049e-42a6-4196-a827-43bba5db8148",
+      "id": "aff156c1-df9a-4d04-a9b5-5150acbd68c2",
       "request": {
         "method": "PUT",
         "urlPathPattern": "/users/{userId}",
@@ -146,7 +146,7 @@
       }
     },
     {
-      "id": "648800fe-f547-44ee-a4c6-971584b22b05",
+      "id": "6ab77f3a-f3bc-4337-b828-f7bc02344587",
       "request": {
         "method": "PUT",
         "urlPathPattern": "/users/{userId}",
@@ -175,7 +175,7 @@
       }
     },
     {
-      "id": "503c0aa8-cd35-4b52-adac-1130cc8ac5d8",
+      "id": "a5ea1275-6e88-4f13-9431-6e755686721c",
       "request": {
         "method": "PUT",
         "urlPathPattern": "/users/{userId}",
@@ -204,7 +204,7 @@
       }
     },
     {
-      "id": "d15dd064-0122-4037-b085-ca4177d5d692",
+      "id": "743b593a-8b14-473a-a0f4-324fa6bbbfb1",
       "request": {
         "method": "PUT",
         "urlPathPattern": "/users/{userId}",

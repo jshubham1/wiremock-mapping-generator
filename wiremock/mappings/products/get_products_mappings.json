@@ -1,7 +1,7 @@
 {
   "mappings": [
     {
-      "id": "d22e576d-3201-46dd-bbcf-415351b2f613",
+      "id": "1d4c0c6a-9533-4b91-b2b0-a0e8095e89ed",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "id": "5ee19835-743b-4ca6-a151-7a344ce42a93",
+      "id": "c5468835-7950-4e52-95dc-ed42dc8df81c",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products",
@@ -52,7 +52,7 @@
       }
     },
     {
-      "id": "b47791a8-bd16-467b-b9a2-59781aabbc05",
+      "id": "49c8a0cc-f1da-4e1f-9f7c-c2a204b48b99",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products",
@@ -79,7 +79,7 @@
       }
     },
     {
-      "id": "a4bac967-6b80-4309-8ebd-abf19a580c21",
+      "id": "f75ab66a-00c1-4465-8da7-9067aebfc696",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products",
@@ -106,7 +106,7 @@
       }
     },
     {
-      "id": "2ba97ff8-91ed-40cb-b940-85a4bcf44a76",
+      "id": "c7716115-2041-455d-aaa9-ad7b750e3fe6",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products",
@@ -133,7 +133,7 @@
       }
     },
     {
-      "id": "72feefc8-91f3-4888-ad74-b0bb8e143736",
+      "id": "f0386030-9dd8-4bc4-b6e8-7cf19c40c02a",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products",
@@ -160,7 +160,7 @@
       }
     },
     {
-      "id": "4f132624-a89e-408a-a363-5e92db61f7fd",
+      "id": "01aa83e4-5258-4d6d-a651-9fb9891512b2",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products",
@@ -187,7 +187,7 @@
       }
     },
     {
-      "id": "6189e716-f993-4ffc-bb71-5e96866a62a3",
+      "id": "3a137444-a005-4ae8-86db-7b22e2675791",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products",
@@ -214,7 +214,7 @@
       }
     },
     {
-      "id": "5d32526c-1569-4442-b482-0baf0852cc13",
+      "id": "080ac434-e8e2-4645-9828-00562d80f4d4",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products/{productId}",
@@ -238,7 +238,7 @@
       }
     },
     {
-      "id": "4278857d-63e4-4500-89a2-88c9bdb465f1",
+      "id": "9ccce8a3-e515-4c3c-8e2c-fb00d9a0784d",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products/{productId}",
@@ -265,7 +265,7 @@
       }
     },
     {
-      "id": "596a76de-2305-4ff5-9400-6855c59be137",
+      "id": "86640a71-8c1a-4985-a99e-b6dc413e64bb",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products/{productId}",
@@ -292,7 +292,7 @@
       }
     },
     {
-      "id": "8d4bc80f-e84f-45ed-b6a7-366320d1b271",
+      "id": "d72bc700-5ee3-456e-9d1c-dcf79eff5241",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products/{productId}",
@@ -319,7 +319,7 @@
       }
     },
     {
-      "id": "d2dac4e8-4769-4eb0-88c6-c5508b4c2ff8",
+      "id": "a0fbad81-403a-4112-81b1-6afd4d72e3bf",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products/{productId}",
@@ -346,7 +346,7 @@
       }
     },
     {
-      "id": "7dedcb5b-9141-4801-8088-2646899276f6",
+      "id": "8deff389-e15a-4c89-8778-9ad18c0d020d",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products/{productId}",
@@ -373,7 +373,7 @@
       }
     },
     {
-      "id": "82541a1b-fcc7-4d7b-ad05-ed4294dbd468",
+      "id": "4e022d42-3d8b-4080-841f-53d94761862a",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products/{productId}",
@@ -400,7 +400,7 @@
       }
     },
     {
-      "id": "1c948285-0391-42e7-868a-65ebc137e43f",
+      "id": "19ecfc7e-a311-48a1-92bb-346c32858570",
       "request": {
         "method": "GET",
         "urlPathPattern": "/products/{productId}",

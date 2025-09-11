@@ -7,7 +7,7 @@
     }
   ],
   "timestamp": "2024-01-01T12:00:00Z",
-  "traceId": "2a0f69ae-b23c-46aa-b524-a45689cc07c5",
+  "traceId": "84d86d9c-6742-4a3e-8acd-1a44572f9223",
   "status": 502,
   "path": "Update user"
 }
