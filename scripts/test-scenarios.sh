@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# Enhanced WireMock Scenario Testing Script
-# This script demonstrates all the generated scenarios
+# Multi-Spec WireMock Scenario Testing Script
+# Tests all generated scenarios for any APIs in the spec directory
 
 set -e
 
 WIREMOCK_URL="http://localhost:8080"
-ENDPOINT="/credit-transfer-order-requests"
 
 # Colors for output
 RED='\033[0;31m'
@@ -15,22 +14,8 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Sample request body
-REQUEST_BODY='{
-  "amount": {
-    "value": "100.00",
-    "currency": "EUR"
-  },
-  "creditorAccount": {
-    "iban": "NL91ABNA0417164300"
-  },
-  "debtor": {
-    "name": "John Doe"
-  }
-}'
-
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}  Enhanced WireMock Scenario Testing${NC}"
+echo -e "${BLUE}  Multi-Spec WireMock Scenario Testing${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo ""
 
@@ -72,67 +57,106 @@ fi
 echo -e "${GREEN}✓ WireMock is running${NC}"
 echo ""
 
-# Test 1: Success Scenario (200/201)
-test_scenario \
-    "Success - Valid Request" \
-    "201" \
-    "curl -s -X POST '$WIREMOCK_URL$ENDPOINT' \
-        -H 'Content-Type: application/json' \
-        -H 'Authorization: Bearer valid-token' \
-        -d '$REQUEST_BODY'"
+# Auto-discover endpoints from generated mappings
+echo "Discovering generated API endpoints..."
+ENDPOINTS=()
 
-# Test 2: Unauthorized (401)
-test_scenario \
-    "Unauthorized - Missing Authorization Header" \
-    "401" \
-    "curl -s -X POST '$WIREMOCK_URL$ENDPOINT' \
-        -H 'Content-Type: application/json' \
-        -d '$REQUEST_BODY'"
+# Look for mapping files and extract endpoints
+if [ -d "wiremock/mappings" ]; then
+    for api_dir in wiremock/mappings/*/; do
+        if [ -d "$api_dir" ]; then
+            api_name=$(basename "$api_dir")
+            echo "Found API: $api_name"
+            
+            # Look for common endpoints in the API
+            if [ -f "$api_dir/get_${api_name}_mappings.json" ]; then
+                # Extract URLs from the mapping files
+                endpoint=$(jq -r '.mappings[0].request.urlPathPattern // .mappings[0].request.urlPath // .mappings[0].request.url' "$api_dir/get_${api_name}_mappings.json" 2>/dev/null | head -1)
+                if [ "$endpoint" != "null" ] && [ "$endpoint" != "" ]; then
+                    ENDPOINTS+=("$endpoint")
+                    echo "  - Endpoint: $endpoint"
+                fi
+            fi
+        fi
+    done
+fi
 
-# Test 3: Forbidden (403)
-test_scenario \
-    "Forbidden - Invalid Authorization Header" \
-    "403" \
-    "curl -s -X POST '$WIREMOCK_URL$ENDPOINT' \
-        -H 'Content-Type: application/json' \
-        -H 'Authorization: Bearer invalid-token' \
-        -d '$REQUEST_BODY'"
+if [ ${#ENDPOINTS[@]} -eq 0 ]; then
+    echo -e "${YELLOW}No endpoints auto-discovered. Using default products endpoint for demo.${NC}"
+    ENDPOINTS=("/products")
+fi
 
-# Test 4: Internal Server Error (500)
-test_scenario \
-    "Internal Server Error - Simulated" \
-    "500" \
-    "curl -s -X POST '$WIREMOCK_URL$ENDPOINT?simulate=server_error' \
-        -H 'Content-Type: application/json' \
-        -H 'Authorization: Bearer valid-token' \
-        -d '$REQUEST_BODY'"
+echo ""
 
-# Test 5: Bad Gateway (502)
-test_scenario \
-    "Bad Gateway - Simulated" \
-    "502" \
-    "curl -s -X POST '$WIREMOCK_URL$ENDPOINT?simulate=bad_gateway' \
-        -H 'Content-Type: application/json' \
-        -H 'Authorization: Bearer valid-token' \
-        -d '$REQUEST_BODY'"
+# Test each discovered endpoint
+for endpoint in "${ENDPOINTS[@]}"; do
+    echo -e "${BLUE}Testing endpoint: $endpoint${NC}"
+    echo ""
+    
+    # Sample request body for POST/PUT requests
+    REQUEST_BODY='{
+      "name": "Test Item",
+      "description": "Test description",
+      "scenario": "happy_path"
+    }'
 
-# Test 6: Service Unavailable (503)
-test_scenario \
-    "Service Unavailable - Simulated" \
-    "503" \
-    "curl -s -X POST '$WIREMOCK_URL$ENDPOINT?simulate=service_unavailable' \
-        -H 'Content-Type: application/json' \
-        -H 'Authorization: Bearer valid-token' \
-        -d '$REQUEST_BODY'"
+    # Test 1: Success Scenario (GET)
+    test_scenario \
+        "GET Success - List items" \
+        "200" \
+        "curl -s -X GET '$WIREMOCK_URL$endpoint'"
 
-# Test 7: Not Found (404) - This one might need different URL or parameter
-test_scenario \
-    "Not Found - Default Priority" \
-    "404" \
-    "curl -s -X POST '$WIREMOCK_URL$ENDPOINT?simulate=not_found' \
-        -H 'Content-Type: application/json' \
-        -H 'Authorization: Bearer valid-token' \
-        -d '$REQUEST_BODY'"
+    # Test 2: Success Scenario (POST)  
+    test_scenario \
+        "POST Success - Create item" \
+        "201" \
+        "curl -s -X POST '$WIREMOCK_URL$endpoint' \
+            -H 'Content-Type: application/json' \
+            -d '$REQUEST_BODY'"
+
+    # Test 3: Unauthorized (401)
+    test_scenario \
+        "Unauthorized - Invalid scenario" \
+        "401" \
+        "curl -s -X POST '$WIREMOCK_URL$endpoint' \
+            -H 'Content-Type: application/json' \
+            -d '{\"name\": \"Test\", \"scenario\": \"unauthorized_access\"}'"
+
+    # Test 4: Forbidden (403)
+    test_scenario \
+        "Forbidden - Forbidden scenario" \
+        "403" \
+        "curl -s -X POST '$WIREMOCK_URL$endpoint' \
+            -H 'Content-Type: application/json' \
+            -d '{\"name\": \"Test\", \"scenario\": \"forbidden_request\"}'"
+
+    # Test 5: Not Found (404)
+    test_scenario \
+        "Not Found - Query parameter" \
+        "404" \
+        "curl -s -X GET '$WIREMOCK_URL$endpoint?simulate=not_found'"
+
+    # Test 6: Internal Server Error (500)
+    test_scenario \
+        "Internal Server Error" \
+        "500" \
+        "curl -s -X GET '$WIREMOCK_URL$endpoint?simulate=server_error'"
+
+    # Test 7: Bad Gateway (502)
+    test_scenario \
+        "Bad Gateway" \
+        "502" \
+        "curl -s -X GET '$WIREMOCK_URL$endpoint?simulate=bad_gateway'"
+
+    # Test 8: Service Unavailable (503)
+    test_scenario \
+        "Service Unavailable" \
+        "503" \
+        "curl -s -X GET '$WIREMOCK_URL$endpoint?simulate=service_unavailable'"
+
+    echo -e "${BLUE}Completed testing for $endpoint${NC}"
+    echo ""
+done
 
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}  Testing Complete${NC}"
