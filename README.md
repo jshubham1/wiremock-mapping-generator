@@ -1,53 +1,57 @@
 # Multi-Spec WireMock Mapping Generator
 
-**🎯 Goal: Drop any OpenAPI spec (YAML/JSON) file into `/spec` directory → Automatic WireMock mapping and stub generation!**
+**🎯 Drop OpenAPI specs → Get WireMock mappings + Spring Boot Java code automatically!**
 
-This project automatically discovers and processes ALL OpenAPI specifications in the `/spec` directory, generating comprehensive WireMock stubs and mappings with zero configuration. Simply place your API specs in the folder and run the ## 🛣️ Future Enhancements
+Transform multiple OpenAPI specifications into comprehensive WireMock stubs with **zero configuration**. Generate both JSON mappings AND production-ready Java Spring Boot integration code from any OpenAPI spec files.
 
-### 🎯 Core Features (High Impact)
-- **🔄 Real-time Spec Watching**: Auto-regenerate on OpenAPI file changes
-- **🌐 GraphQL Support**: Extend beyond REST to GraphQL schemas
-- **🔐 Authentication Scenarios**: OAuth, JWT, API key mocking patterns
-- **📊 State Management**: Stateful mocking with data persistence across requests
-- **🧪 Contract Testing**: Validate actual API responses against generated mocks
-- **📈 Analytics Dashboard**: Track mock usage, response times, error rates
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0+-green.svg)](https://swagger.io/specification/)
+[![WireMock](https://img.shields.io/badge/WireMock-3.3.1-blue.svg)](http://wiremock.org/)
+[![Java](https://img.shields.io/badge/Java-Spring%20Boot-orange.svg)](https://spring.io/projects/spring-boot)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
-### 🔧 Developer Experience
-- **🖥️ VS Code Extension**: Real-time preview and generation within IDE
-- **⚡ CLI Tool**: Standalone binary for any environment (`npx wiremock-gen`)
-- **🎨 Web UI**: Browser-based configuration and monitoring interface
-- **📱 Mobile SDK Support**: Generate mocks for iOS/Android development
-- **🔍 Interactive Explorer**: Postman-like interface for testing generated mocks
+## 🔥 What's New: Java Code Generation
 
-### 🏢 Enterprise Features
-- **🔒 Enterprise Security**: LDAP integration, role-based access control
-- **🌍 Multi-environment**: Dev/staging/prod configuration management
-- **📋 Governance**: API versioning, deprecation warnings, compliance checks
-- **📊 Metrics & Monitoring**: Prometheus metrics, health checks, alerting
-- **🏗️ Kubernetes Operator**: Native K8s deployment and scaling
+Generate **Spring Boot-ready Java code** alongside JSON mappings! Perfect for enterprise Java teams who need type-safe WireMock integration.
 
-### 🚀 Integration Ecosystem
-- **🔄 CI/CD Plugins**: GitHub Actions, Jenkins, GitLab CI official plugins
-- **☁️ Cloud Providers**: AWS Lambda, Google Cloud Functions, Azure integrations
-- **🛠️ Testing Frameworks**: Jest, Cypress, Playwright, Selenium integrations
-- **📡 Service Mesh**: Istio, Linkerd traffic interception and mocking
-- **🗄️ Database Mocking**: Generate database fixtures from API responses
-
-### 🧠 AI & Machine Learning
-- **🤖 Smart Example Generation**: AI-powered realistic test data creation
-- **📝 Auto-documentation**: Generate human-readable API guides from specs
-- **🔍 Intelligent Matching**: ML-based request pattern recognition
-- **📈 Usage Optimization**: Recommend mock improvements based on usage patterns
-- **🎯 Test Case Generation**: Auto-generate comprehensive test scenarios
-
-### 📅 Implementation Roadmap
-
-#### 🥉 Phase 1: Quick Wins (1-2 months)
 ```bash
-✅ Real-time file watching with auto-regeneration
-✅ VS Code extension for inline preview
-✅ NPM CLI package for global installation
-✅ GitHub Actions plugin for CI/CD
+# Generate JSON mappings + Java Spring Boot code
+make generate-java
+
+# Or directly with Python
+python3 scripts/multi_spec_wiremock_generator.py spec wiremock --java --package com.yourcompany.wiremock
+```
+
+### 🎯 Java Output Example
+```
+wiremock/java/
+├── README.md                    # Comprehensive Java usage guide
+├── pom.xml & build.gradle       # Ready-to-use build files
+└── src/
+    ├── main/java/com/example/wiremock/
+    │   ├── MultiApiWireMockServer.java      # 🎯 Main orchestrator
+    │   └── config/
+    │       ├── WireMockTestConfig.java      # Spring Boot config
+    │       ├── ProductsWireMockConfig.java  # Per-API configs
+    │       └── UsersWireMockConfig.java     # Auto-generated per API
+    └── test/java/com/example/wiremock/test/
+        ├── BaseWireMockIntegrationTest.java # Base test class
+        └── {Api}WireMockTest.java           # Per-API test bases
+```
+
+### � Use in Your Spring Boot Tests
+```java
+@SpringBootTest
+@Import(WireMockTestConfig.class)
+class IntegrationTest extends BaseWireMockIntegrationTest {
+    @Test
+    void shouldTestApiInteractions() {
+        String productsUrl = getProductsBaseUrl(); // Port 8080
+        String usersUrl = getUsersBaseUrl();       // Port 8081
+        // Test your services that call these APIs
+    }
+}
+```
 ✅ Basic authentication scenario templates
 ✅ Java code generation for Spring Boot integration
 ```
@@ -107,19 +111,56 @@ This project automatically discovers and processes ALL OpenAPI specifications in
 [![WireMock](https://img.shields.io/badge/WireMock-3.3.1-blue.svg)](http://wiremock.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
-## 🌟 Features
+## � Why Use This Tool?
 
-- ✅ **Zero Configuration**: Drop OpenAPI specs in `/spec` → automatic processing
-- ✅ **Multi-API Support**: Process unlimited APIs simultaneously
-- ✅ **Auto-Discovery**: Scans for `*.yaml`, `*.yml`, `*.json` files
-- ✅ **Consolidated Mappings**: Groups HTTP methods into single files
-- ✅ **Organized Structure**: API-specific folders auto-created
-- ✅ **Spec-Compliant Responses**: Uses actual OpenAPI examples
-- ✅ **Comprehensive Scenarios**: All status codes (200, 201, 401, 403, 404, 500, 502, 503)
-- ✅ **Smart Request Matching**: JSON Path and header-based routing
-- 🔥 **Java Code Generation**: Spring Boot WireMock configuration classes
-- ✅ **Docker-Ready**: Easy deployment with Docker Compose
-- ✅ **Team-Friendly**: Shareable setup across development teams
+### 🏢 **Perfect For Enterprise Java Teams**
+- **🔒 Type-Safe Integration**: Get strongly-typed Spring beans for API URLs
+- **⚡ Zero Boilerplate**: No manual WireMock configuration needed  
+- **🧪 Test-Ready**: Instant JUnit 5 + Spring Boot test base classes
+- **🏗️ Production Patterns**: Follow Spring Boot best practices out of the box
+- **👥 Team Consistency**: Standardized approach across all your microservices
+
+### 🚀 **Ideal Use Cases**
+- **🔧 Microservices Testing**: Mock external APIs in your integration tests
+- **🔄 Contract Testing**: Validate your code against API contracts  
+- **🧪 Development Environment**: Local development without external dependencies
+- **⚡ CI/CD Pipelines**: Fast, reliable tests without network dependencies
+- **📊 Load Testing**: Consistent mock responses for performance testing
+- **🎯 Demo Environments**: Showcase features without live API dependencies
+
+### 📈 **Key Benefits Over Manual WireMock**
+- **🕐 10x Faster Setup**: Minutes instead of hours to configure
+- **🔍 Auto-Discovery**: Processes unlimited APIs automatically
+- **✅ Spec Compliance**: Responses match your OpenAPI definitions exactly
+- **🔄 Easy Updates**: Regenerate when specs change
+- **📋 Organized Output**: Clean, maintainable structure
+- **🐳 Docker Integration**: Works seamlessly in containerized environments
+
+## �🌟 Core Features
+
+### 🔥 **Java Spring Boot Integration** (NEW!)
+- **🏗️ Spring Boot Configuration Classes**: Auto-generated `@TestConfiguration` for each API
+- **🧪 JUnit 5 Test Base Classes**: Ready-to-extend test classes with lifecycle management  
+- **🎯 Multi-API Orchestrator**: Single class to manage all WireMock servers with different ports
+- **📦 Maven & Gradle Support**: Complete build files with all required dependencies
+- **🔒 Type-Safe API URLs**: Strongly-typed Spring beans (`@Autowired String productsApiBaseUrl`)
+- **⚡ Zero Boilerplate**: Just `@Import(WireMockTestConfig.class)` and you're ready!
+
+### 🎯 **WireMock JSON Generation**
+- **🚀 Zero Configuration**: Drop OpenAPI specs in `/spec` → automatic processing
+- **🔄 Multi-API Support**: Process unlimited APIs simultaneously  
+- **🔍 Auto-Discovery**: Scans for `*.yaml`, `*.yml`, `*.json` files
+- **📋 Consolidated Mappings**: Groups HTTP methods into organized files
+- **✅ Spec-Compliant Responses**: Uses actual OpenAPI examples and schemas
+- **🎭 Comprehensive Scenarios**: All status codes (200, 201, 401, 403, 404, 500, 502, 503)
+- **🎯 Smart Request Matching**: JSON Path and header-based routing
+
+### �️ **Developer Experience**
+- **🐳 Docker-Ready**: Easy deployment with Docker Compose
+- **👥 Team-Friendly**: Shareable setup across development teams
+- **⌨️ Command Line Interface**: Both direct Python and Make targets
+- **📁 Organized Structure**: API-specific folders auto-created
+- **📖 Rich Documentation**: Comprehensive READMEs for both JSON and Java usage
 
 ## 🏗️ Architecture
 
@@ -139,14 +180,40 @@ This project automatically discovers and processes ALL OpenAPI specifications in
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start Guide
+
+### 🎯 Choose Your Path
+
+**🔥 Path 1: JSON + Java Code (RECOMMENDED for Java Teams)**
+```bash
+# 1. Drop your OpenAPI specs in the spec/ directory
+cp your-api-specs.yaml spec/
+
+# 2. Generate JSON mappings + Spring Boot Java code
+make generate-java
+
+# 3. Use in your Spring Boot tests
+# See generated README at wiremock/java/README.md for complete examples
+```
+
+**⚡ Path 2: JSON Mappings Only (Traditional WireMock)**
+```bash
+# 1. Drop your OpenAPI specs in the spec/ directory  
+cp your-api-specs.yaml spec/
+
+# 2. Generate JSON mappings
+make generate
+
+# 3. Start WireMock server
+make start
+```
 
 ### Prerequisites
 
-- **Docker & Docker Compose** installed ([Get Docker](https://docs.docker.com/get-docker/))
+- **Docker & Docker Compose** ([Get Docker](https://docs.docker.com/get-docker/))
 - **OpenAPI 3.0+** specification files (YAML or JSON)
 
-### 🎯 Three Simple Steps
+### 🎯 Three Simple Steps (Traditional Path)
 
 **1. Drop API Specs**
 ```bash
@@ -161,6 +228,8 @@ cp third-api.yaml spec/
 ```bash
 # One command processes ALL specs in /spec directory
 make generate
+# OR for Java integration:
+make generate-java
 ```
 
 **3. Start WireMock**
@@ -181,48 +250,194 @@ wiremock-mapping-generator/
 │   ├── orders-api.json             # ← JSON format supported
 │   └── any-name.yaml               # ← Unlimited APIs supported
 ├── wiremock/                       # 🚀 AUTO-GENERATED OUTPUT
-│   ├── mappings/                   # ← Organized by API name
+│   ├── mappings/                   # ← JSON mappings for WireMock
 │   │   ├── products/               # ← Auto-created from products-api.yaml
 │   │   │   ├── get_products_mappings.json      # All GET operations
 │   │   │   ├── create_products_mappings.json   # All POST operations
 │   │   │   ├── update_products_mappings.json   # All PUT operations
 │   │   │   └── delete_products_mappings.json   # All DELETE operations
 │   │   ├── users/                  # ← Auto-created from users-api.yaml
-│   │   │   ├── get_users_mappings.json
-│   │   │   ├── create_users_mappings.json
-│   │   │   └── ...
+│   │   │   └── ... (similar structure)
 │   │   └── orders/                 # ← Auto-created from orders-api.json
-│   └── __files/                    # ← Response files (realistic data)
-│       ├── products/               # ← Spec-compliant responses
-│       ├── users/                  # ← Enhanced error responses
-│       └── orders/                 # ← Auto-generated for each API
+│   ├── __files/                    # ← Response files (realistic data)
+│   │   ├── products/               # ← Spec-compliant responses
+│   │   ├── users/                  # ← Enhanced error responses
+│   │   └── orders/                 # ← Auto-generated for each API
+│   └── java/                       # 🔥 AUTO-GENERATED JAVA CODE
+│       ├── README.md               # ← Comprehensive Java usage guide
+│       ├── pom.xml                 # ← Maven build file
+│       ├── build.gradle            # ← Gradle build file
+│       └── src/
+│           ├── main/java/com/example/wiremock/
+│           │   ├── MultiApiWireMockServer.java      # 🎯 Main orchestrator
+│           │   └── config/
+│           │       ├── WireMockTestConfig.java      # Spring Boot config
+│           │       ├── ProductsWireMockConfig.java  # Per-API configs
+│           │       └── UsersWireMockConfig.java     # Auto-generated per API
+│           └── test/java/com/example/wiremock/test/
+│               ├── BaseWireMockIntegrationTest.java # Base test class
+│               ├── ProductsWireMockTest.java        # Per-API test bases
+│               └── UsersWireMockTest.java           # Ready for extension
 ├── scripts/
 │   └── multi_spec_wiremock_generator.py    # Core generator engine
 ├── docker-compose.yml              # Docker configuration
-├── Makefile                        # Easy commands
+├── Makefile                        # Easy commands with Java support
 └── .env.example                    # Configuration template
+```
 ```
 
 ## 🛠️ Available Commands
 
 ```bash
-# Core Commands
-make help                    # Show all available commands
-make generate               # Generate mappings for all APIs in /spec
+# 🔥 Core Generation Commands
+make generate-java          # Generate JSON mappings + Spring Boot Java code
+make generate               # Generate JSON mappings only (traditional)
+make help                   # Show all available commands
+
+# 🚀 WireMock Server Commands  
 make start                  # Start WireMock with generated mappings
 make stop                   # Stop WireMock server
 make restart                # Restart WireMock server
 
-# Development Commands
+# 🔧 Development Commands
 make clean                  # Clean generated files
 make logs                   # Show WireMock logs
 make status                 # Check service status
 make test                   # Test generated endpoints
 make test-scenarios         # Test all error scenarios
 
-# Validation Commands
+# ✅ Validation Commands
 make validate-spec          # Validate all OpenAPI specs
 make show-mappings          # List generated mapping files
+```
+
+### 🎯 Command Line Options
+
+```bash
+# Direct Python usage (bypass Docker)
+python3 scripts/multi_spec_wiremock_generator.py spec wiremock
+
+# Generate with Java code
+python3 scripts/multi_spec_wiremock_generator.py spec wiremock --java
+
+# Custom Java package
+python3 scripts/multi_spec_wiremock_generator.py spec wiremock --java --package com.yourcompany.wiremock
+
+# Help
+python3 scripts/multi_spec_wiremock_generator.py --help
+```
+
+## 🔥 Java Spring Boot Integration Examples
+
+### 🎯 Single API Testing
+```java
+@SpringBootTest
+@Import(ProductsWireMockConfig.class)
+class ProductServiceTest {
+    @Autowired
+    private String productsApiBaseUrl; // http://localhost:8089
+    
+    @Autowired
+    private RestTemplate restTemplate;
+    
+    @Test
+    void shouldCallProductsApi() {
+        String response = restTemplate.getForObject(
+            productsApiBaseUrl + "/products", 
+            String.class
+        );
+        assertThat(response).isNotNull();
+    }
+}
+```
+
+### 🚀 Multi-API Integration Testing
+```java
+@SpringBootTest
+@Import(WireMockTestConfig.class)
+class IntegrationTest extends BaseWireMockIntegrationTest {
+    
+    @Test
+    void shouldTestApiInteractions() {
+        String productsUrl = getProductsBaseUrl(); // Port 8080
+        String usersUrl = getUsersBaseUrl();       // Port 8081
+        String ordersUrl = getOrdersBaseUrl();     // Port 8082
+        
+        // Test interactions between multiple services
+        // All APIs are automatically started and ready
+    }
+    
+    @Test 
+    void shouldTestErrorScenarios() {
+        // Reset all servers to clean state
+        getMultiApiServer().resetAll();
+        
+        // All error scenarios from OpenAPI specs are available
+        // Test your error handling logic
+    }
+}
+```
+
+### ⚡ Manual Server Management
+```java
+class CustomIntegrationTest {
+    private MultiApiWireMockServer server = new MultiApiWireMockServer();
+    
+    @BeforeEach
+    void setUp() {
+        server.startAllServers(); // Starts all APIs on different ports
+        
+        Map<String, String> urls = server.getServerUrls();
+        urls.forEach((api, url) -> {
+            // Configure your HTTP clients with the URLs
+            configureApiClient(api, url);
+        });
+    }
+    
+    @AfterEach
+    void tearDown() {
+        server.stopAllServers();
+    }
+    
+    @Test
+    void shouldTestWithCustomConfiguration() {
+        // Your test logic here
+        // Full control over server lifecycle
+    }
+}
+```
+
+### 🧪 Advanced Test Patterns
+```java
+@SpringBootTest
+@Import(WireMockTestConfig.class)
+class AdvancedIntegrationTest extends BaseWireMockIntegrationTest {
+    
+    @Test
+    void shouldTestCircuitBreakerWithMultipleApis() {
+        // Get individual WireMock servers for fine-grained control
+        WireMockServer productsServer = getMultiApiServer().getServer("products");
+        WireMockServer usersServer = getMultiApiServer().getServer("users");
+        
+        // Create custom stubs for specific test scenarios
+        productsServer.stubFor(get(urlEqualTo("/products"))
+            .willReturn(aResponse()
+                .withStatus(503)
+                .withFixedDelay(5000))); // Simulate slow response
+                
+        // Test your circuit breaker logic
+    }
+    
+    @Test
+    void shouldVerifyRequestsWereMade() {
+        // Test your service
+        callYourService();
+        
+        // Verify requests were made to the mock APIs
+        getMultiApiServer().getServer("products")
+            .verify(getRequestedFor(urlEqualTo("/products")));
+    }
+}
 ```
 
 ## 🎯 How It Works
