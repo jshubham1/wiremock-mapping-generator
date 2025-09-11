@@ -1,7 +1,7 @@
 {
   "mappings": [
     {
-      "id": "53d7e12b-4ed9-4a4c-ac37-361e9b98f7fb",
+      "id": "bc15ff87-326e-4d2d-ba22-b4b518fa018d",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/products/{productId}",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "id": "b140fa03-8ae1-40a1-a526-2fe9105aafb2",
+      "id": "b9a6fb21-3193-4d69-8942-e272ae024c28",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/products/{productId}",
@@ -52,7 +52,7 @@
       }
     },
     {
-      "id": "cdef8d6d-1be6-487e-b597-773fb61694b6",
+      "id": "54022942-5192-4aba-bd37-9ae30a6dfb1a",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/products/{productId}",
@@ -79,7 +79,7 @@
       }
     },
     {
-      "id": "e348458c-5f3f-49d2-8d58-6a29743e238b",
+      "id": "7c553c38-892c-4af1-9e1d-dcbce2a2f8f0",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/products/{productId}",
@@ -106,7 +106,7 @@
       }
     },
     {
-      "id": "7fd9c684-1b01-4de1-b407-4cf0dc7ea6fe",
+      "id": "270314dc-4f28-458e-a43f-04c050bf1ab4",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/products/{productId}",
@@ -133,7 +133,7 @@
       }
     },
     {
-      "id": "f7810167-70aa-41d8-a7fe-ddb91dfc6516",
+      "id": "feb0ece0-c4db-49b2-b15c-554794ed22a8",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/products/{productId}",
@@ -160,7 +160,7 @@
       }
     },
     {
-      "id": "0081aa7d-7047-4bcf-b824-505d68c2f781",
+      "id": "a245d7d9-3c00-4c81-abd2-45c91ac0e6f8",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/products/{productId}",
@@ -187,7 +187,7 @@
       }
     },
     {
-      "id": "212d28a1-72b5-49e7-8d31-2f61bc665544",
+      "id": "567dcecd-4573-4d8f-a7c0-619f5ef1edcd",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/products/{productId}",

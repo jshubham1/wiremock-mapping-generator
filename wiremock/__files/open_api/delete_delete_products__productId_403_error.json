@@ -7,7 +7,7 @@
     }
   ],
   "timestamp": "2024-01-01T12:00:00Z",
-  "traceId": "0e5f8444-35dc-4370-bc78-102b89507af7",
+  "traceId": "ef4e2d37-4cff-4a2c-b336-5bec3deb7549",
   "status": 403,
   "path": "Delete product by ID"
 }

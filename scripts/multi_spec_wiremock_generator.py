@@ -2,6 +2,7 @@
 """
 Multi-Spec WireMock Mapping Generator
 Converts multiple OpenAPI specifications to consolidated WireMock stub mappings organized by API and HTTP method
+Includes Java code generation for Spring Boot and JUnit integration
 """
 
 import json
@@ -9,9 +10,11 @@ import sys
 import os
 import re
 import uuid
+import argparse
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 import glob
+from datetime import datetime
 
 # Try to import yaml, but make it optional
 try:
@@ -534,21 +537,869 @@ class MultiSpecWireMockGenerator:
         print(f"📁 Response files directory: {self.files_dir}")
 
 
+class JavaWireMockGenerator:
+    """Generate Java WireMock configuration classes for Spring Boot and JUnit integration"""
+    
+    def __init__(self, package_name: str = "com.example.wiremock"):
+        self.package_name = package_name
+        self.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    def generate_java_code_for_apis(self, specs: List[Dict[str, str]], output_dir: str):
+        """Generate comprehensive Java code for all APIs"""
+        java_base_dir = os.path.join(output_dir, 'java')
+        
+        # Create directory structure
+        package_dirs = self.package_name.split('.')
+        java_src_dir = os.path.join(java_base_dir, 'src', 'main', 'java', *package_dirs)
+        java_test_dir = os.path.join(java_base_dir, 'src', 'test', 'java', *package_dirs)
+        java_resources_dir = os.path.join(java_base_dir, 'src', 'test', 'resources')
+        
+        os.makedirs(java_src_dir, exist_ok=True)
+        os.makedirs(java_test_dir, exist_ok=True)
+        os.makedirs(java_resources_dir, exist_ok=True)
+        
+        print(f"\n🔧 Generating Java WireMock Code")
+        print("-" * 40)
+        
+        # Generate main orchestrator class
+        self.generate_multi_api_server(specs, java_src_dir)
+        
+        # Generate individual API configurations
+        for spec_info in specs:
+            self.generate_api_specific_classes(spec_info, java_src_dir, java_test_dir)
+        
+        # Generate Spring Boot configuration
+        self.generate_spring_config(specs, java_src_dir)
+        
+        # Generate base test class
+        self.generate_base_test_class(specs, java_test_dir)
+        
+        # Generate build files
+        self.generate_build_files(java_base_dir)
+        
+        # Generate README
+        self.generate_java_readme(specs, java_base_dir)
+        
+        print(f"✅ Java code generated in: {java_base_dir}")
+    
+    def generate_multi_api_server(self, specs: List[Dict[str, str]], output_dir: str):
+        """Generate main multi-API server orchestrator"""
+        api_names = [spec['api_name'] for spec in specs]
+        api_list = ', '.join(api_names)
+        
+        class_content = f'''package {self.package_name};
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import org.springframework.stereotype.Component;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * Multi-API WireMock Server Manager
+ * Auto-generated from OpenAPI specifications on {self.timestamp}
+ * 
+ * Manages WireMock servers for: {api_list}
+ * 
+ * Usage:
+ * 1. Include in your Spring Boot test context
+ * 2. Access individual servers via getServer(apiName)
+ * 3. Get base URLs via getServerUrls()
+ */
+@Component
+public class MultiApiWireMockServer {{
+    
+    private final Map<String, WireMockServer> servers = new HashMap<>();
+    private static final int BASE_PORT = 8080;
+    private static final AtomicInteger portCounter = new AtomicInteger(BASE_PORT);
+    
+    @PostConstruct
+    public void startAllServers() {{
+        System.out.println("🚀 Starting WireMock servers for all APIs...");
+        
+{self._generate_server_startup_code(specs)}
+        
+        System.out.println("✅ All WireMock servers started successfully");
+        getServerUrls().forEach((api, url) -> 
+            System.out.println("  - " + api + ": " + url));
+    }}
+    
+    @PreDestroy
+    public void stopAllServers() {{
+        System.out.println("🛑 Stopping all WireMock servers...");
+        servers.values().forEach(server -> {{
+            if (server.isRunning()) {{
+                server.stop();
+            }}
+        }});
+        servers.clear();
+    }}
+    
+    public WireMockServer getServer(String apiName) {{
+        return servers.get(apiName);
+    }}
+    
+    public Map<String, String> getServerUrls() {{
+        Map<String, String> urls = new HashMap<>();
+{self._generate_url_mapping_code(specs)}
+        return urls;
+    }}
+    
+    public boolean isRunning(String apiName) {{
+        WireMockServer server = servers.get(apiName);
+        return server != null && server.isRunning();
+    }}
+    
+    public void resetAll() {{
+        servers.values().forEach(WireMockServer::resetAll);
+    }}
+}}'''
+        
+        with open(os.path.join(output_dir, 'MultiApiWireMockServer.java'), 'w') as f:
+            f.write(class_content)
+        
+        print(f"✓ Generated MultiApiWireMockServer.java")
+    
+    def _generate_server_startup_code(self, specs: List[Dict[str, str]]) -> str:
+        """Generate server startup code for each API"""
+        startup_code = ""
+        for i, spec in enumerate(specs):
+            api_name = spec['api_name']
+            class_name = self._to_class_name(api_name)
+            port_offset = i
+            
+            startup_code += f'''        // Start {class_name} WireMock Server
+        try {{
+            int {api_name}Port = BASE_PORT + {port_offset};
+            WireMockServer {api_name}Server = new WireMockServer(
+                WireMockConfiguration.options()
+                    .port({api_name}Port)
+                    .usingFilesUnderClasspath("wiremock/{api_name}")
+                    .verbose(true)
+            );
+            {api_name}Server.start();
+            servers.put("{api_name}", {api_name}Server);
+            System.out.println("✓ {class_name} API server started on port " + {api_name}Port);
+        }} catch (Exception e) {{
+            System.err.println("❌ Failed to start {class_name} server: " + e.getMessage());
+            throw new RuntimeException("Failed to start {class_name} WireMock server", e);
+        }}
+        
+'''
+        return startup_code
+    
+    def _generate_url_mapping_code(self, specs: List[Dict[str, str]]) -> str:
+        """Generate URL mapping code"""
+        url_code = ""
+        for i, spec in enumerate(specs):
+            api_name = spec['api_name']
+            port_offset = i
+            url_code += f'        urls.put("{api_name}", "http://localhost:" + (BASE_PORT + {port_offset}));\n'
+        return url_code
+    
+    def generate_api_specific_classes(self, spec_info: Dict[str, str], src_dir: str, test_dir: str):
+        """Generate API-specific configuration and test classes"""
+        api_name = spec_info['api_name']
+        class_name = self._to_class_name(api_name)
+        
+        # Generate configuration class
+        config_content = f'''package {self.package_name}.config;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+/**
+ * WireMock Configuration for {class_name} API
+ * Auto-generated from OpenAPI specification: {spec_info['filename']}
+ * Generated on: {self.timestamp}
+ * 
+ * Usage in tests:
+ * @SpringBootTest
+ * @Import({class_name}WireMockConfig.class)
+ * class YourTest {{
+ *     @Autowired
+ *     private String {api_name}ApiBaseUrl;
+ * }}
+ */
+@TestConfiguration
+public class {class_name}WireMockConfig {{
+
+    private WireMockServer wireMockServer;
+    public static final int WIREMOCK_PORT = 8089;
+    
+    @PostConstruct
+    public void setupWireMock() {{
+        wireMockServer = new WireMockServer(
+            WireMockConfiguration.options()
+                .port(WIREMOCK_PORT)
+                .usingFilesUnderClasspath("wiremock/{api_name}")
+                .verbose(true)
+        );
+        wireMockServer.start();
+        configureFor("localhost", WIREMOCK_PORT);
+        setupDefaultStubs();
+    }}
+    
+    @PreDestroy
+    public void tearDown() {{
+        if (wireMockServer != null && wireMockServer.isRunning()) {{
+            wireMockServer.stop();
+        }}
+    }}
+    
+    @Bean
+    @Primary
+    public String {api_name}ApiBaseUrl() {{
+        return "http://localhost:" + WIREMOCK_PORT;
+    }}
+    
+    @Bean
+    public WireMockServer {api_name}WireMockServer() {{
+        return wireMockServer;
+    }}
+    
+    private void setupDefaultStubs() {{
+        // Health check endpoint
+        stubFor(get(urlPathEqualTo("/health"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBody("{{\\"status\\": \\"UP\\", \\"service\\": \\"{api_name}\\"}}")));
+                
+        // Default 404 for unmapped endpoints
+        stubFor(any(urlMatching(".*"))
+            .atPriority(10)
+            .willReturn(aResponse()
+                .withStatus(404)
+                .withHeader("Content-Type", "application/json")
+                .withBody("{{\\"error\\": \\"Endpoint not found\\", \\"service\\": \\"{api_name}\\"}}")));
+    }}
+    
+    public void resetStubs() {{
+        if (wireMockServer != null) {{
+            wireMockServer.resetAll();
+            setupDefaultStubs();
+        }}
+    }}
+}}'''
+        
+        # Create config directory
+        config_dir = os.path.join(src_dir, 'config')
+        os.makedirs(config_dir, exist_ok=True)
+        
+        with open(os.path.join(config_dir, f'{class_name}WireMockConfig.java'), 'w') as f:
+            f.write(config_content)
+        
+        # Generate test base class
+        test_content = f'''package {self.package_name}.test;
+
+import {self.package_name}.config.{class_name}WireMockConfig;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+/**
+ * Base test class for {class_name} API integration tests
+ * Auto-generated from OpenAPI specification: {spec_info['filename']}
+ * Generated on: {self.timestamp}
+ * 
+ * Extend this class in your integration tests:
+ * 
+ * class {class_name}IntegrationTest extends {class_name}WireMockTest {{
+ *     @Test
+ *     void shouldCallApi() {{
+ *         // Your test here using {api_name}ApiBaseUrl
+ *         String response = restTemplate.getForObject({api_name}ApiBaseUrl + "/endpoint", String.class);
+ *         assertThat(response).isNotNull();
+ *     }}
+ * }}
+ */
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ContextConfiguration(classes = {class_name}WireMockConfig.class)
+public abstract class {class_name}WireMockTest {{
+
+    @Autowired
+    protected String {api_name}ApiBaseUrl;
+    
+    @Autowired
+    protected WireMockServer {api_name}WireMockServer;
+    
+    @BeforeEach
+    void setUp() {{
+        // Reset to clean state before each test
+        if ({api_name}WireMockServer.isRunning()) {{
+            {api_name}WireMockServer.resetAll();
+        }}
+    }}
+    
+    @AfterEach
+    void tearDown() {{
+        // Clean up after each test
+        if ({api_name}WireMockServer.isRunning()) {{
+            {api_name}WireMockServer.resetAll();
+        }}
+    }}
+    
+    protected String getApiBaseUrl() {{
+        return {api_name}ApiBaseUrl;
+    }}
+    
+    protected WireMockServer getWireMockServer() {{
+        return {api_name}WireMockServer;
+    }}
+}}'''
+        
+        # Create test directory
+        test_package_dir = os.path.join(test_dir, 'test')
+        os.makedirs(test_package_dir, exist_ok=True)
+        
+        with open(os.path.join(test_package_dir, f'{class_name}WireMockTest.java'), 'w') as f:
+            f.write(test_content)
+        
+        print(f"✓ Generated {class_name} configuration and test classes")
+    
+    def generate_spring_config(self, specs: List[Dict[str, str]], output_dir: str):
+        """Generate Spring Boot main configuration"""
+        api_imports = []
+        api_configs = []
+        
+        for spec in specs:
+            class_name = self._to_class_name(spec['api_name'])
+            api_imports.append(f"import {self.package_name}.config.{class_name}WireMockConfig;")
+            api_configs.append(f"        {class_name}WireMockConfig.class,")
+        
+        imports_str = '\n'.join(api_imports)
+        configs_str = '\n'.join(api_configs)
+        
+        config_content = f'''package {self.package_name}.config;
+
+{imports_str}
+import {self.package_name}.MultiApiWireMockServer;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+
+/**
+ * Main WireMock Test Configuration
+ * Auto-generated configuration for all APIs
+ * Generated on: {self.timestamp}
+ * 
+ * Use this configuration to import all WireMock servers in your tests:
+ * 
+ * @SpringBootTest
+ * @Import(WireMockTestConfig.class)
+ * class IntegrationTest {{
+ *     @Autowired
+ *     private MultiApiWireMockServer multiApiServer;
+ * }}
+ */
+@TestConfiguration
+@Import({{
+{configs_str}
+}})
+public class WireMockTestConfig {{
+    
+    @Bean
+    @Primary
+    public MultiApiWireMockServer multiApiWireMockServer() {{
+        return new MultiApiWireMockServer();
+    }}
+}}'''
+        
+        config_dir = os.path.join(output_dir, 'config')
+        os.makedirs(config_dir, exist_ok=True)
+        
+        with open(os.path.join(config_dir, 'WireMockTestConfig.java'), 'w') as f:
+            f.write(config_content)
+        
+        print(f"✓ Generated WireMockTestConfig.java")
+    
+    def generate_base_test_class(self, specs: List[Dict[str, str]], output_dir: str):
+        """Generate base integration test class"""
+        api_autowired = []
+        api_getters = []
+        
+        for spec in specs:
+            api_name = spec['api_name']
+            api_autowired.append(f"    @Autowired\n    protected String {api_name}ApiBaseUrl;")
+            api_getters.append(f'''    protected String get{self._to_class_name(api_name)}BaseUrl() {{
+        return {api_name}ApiBaseUrl;
+    }}''')
+        
+        autowired_str = '\n    \n'.join(api_autowired)
+        getters_str = '\n    \n'.join(api_getters)
+        
+        test_content = f'''package {self.package_name}.test;
+
+import {self.package_name}.config.WireMockTestConfig;
+import {self.package_name}.MultiApiWireMockServer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+/**
+ * Base Integration Test Class
+ * Auto-generated test base for all APIs
+ * Generated on: {self.timestamp}
+ * 
+ * Extend this class for comprehensive integration tests:
+ * 
+ * class MyIntegrationTest extends BaseWireMockIntegrationTest {{
+ *     @Test
+ *     void shouldTestMultipleApis() {{
+ *         // Test interactions between multiple APIs
+ *         // All APIs are available via getXxxBaseUrl() methods
+ *     }}
+ * }}
+ */
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ContextConfiguration(classes = WireMockTestConfig.class)
+public abstract class BaseWireMockIntegrationTest {{
+
+    @Autowired
+    protected MultiApiWireMockServer multiApiServer;
+    
+{autowired_str}
+    
+    @BeforeEach
+    void setUpAll() {{
+        // Ensure all servers are running
+        if (multiApiServer != null) {{
+            // Reset all servers to clean state
+            multiApiServer.resetAll();
+        }}
+    }}
+    
+    @AfterEach 
+    void tearDownAll() {{
+        // Clean up after each test
+        if (multiApiServer != null) {{
+            multiApiServer.resetAll();
+        }}
+    }}
+    
+    protected MultiApiWireMockServer getMultiApiServer() {{
+        return multiApiServer;
+    }}
+    
+{getters_str}
+}}'''
+        
+        test_dir = os.path.join(output_dir, 'test')
+        os.makedirs(test_dir, exist_ok=True)
+        
+        with open(os.path.join(test_dir, 'BaseWireMockIntegrationTest.java'), 'w') as f:
+            f.write(test_content)
+        
+        print(f"✓ Generated BaseWireMockIntegrationTest.java")
+    
+    def generate_build_files(self, output_dir: str):
+        """Generate Maven pom.xml and Gradle build.gradle"""
+        
+        # Maven pom.xml
+        pom_content = '''<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <groupId>com.example</groupId>
+    <artifactId>wiremock-generated-stubs</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+    
+    <name>WireMock Generated Stubs</name>
+    <description>Auto-generated WireMock configurations from OpenAPI specifications</description>
+    
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <wiremock.version>3.3.1</wiremock.version>
+        <spring-boot.version>2.7.15</spring-boot.version>
+        <junit.version>5.10.0</junit.version>
+    </properties>
+    
+    <dependencies>
+        <!-- WireMock -->
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8</artifactId>
+            <version>${wiremock.version}</version>
+        </dependency>
+        
+        <!-- Spring Boot Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- JUnit 5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Spring Context for @Component -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.3.23</version>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>'''
+        
+        with open(os.path.join(output_dir, 'pom.xml'), 'w') as f:
+            f.write(pom_content)
+        
+        # Gradle build.gradle
+        gradle_content = '''plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.15'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.example'
+version = '1.0.0'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.github.tomakehurst:wiremock-jre8:3.3.1'
+    implementation 'org.springframework:spring-context:5.3.23'
+    
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    enabled = true
+    archiveClassifier = ''
+}'''
+        
+        with open(os.path.join(output_dir, 'build.gradle'), 'w') as f:
+            f.write(gradle_content)
+        
+        print(f"✓ Generated pom.xml and build.gradle")
+    
+    def generate_java_readme(self, specs: List[Dict[str, str]], output_dir: str):
+        """Generate comprehensive README for Java code"""
+        api_list = '\n'.join([f"- {spec['api_name']}: {spec['filename']}" for spec in specs])
+        
+        readme_content = f'''# WireMock Java Integration
+
+Auto-generated Java WireMock configurations from OpenAPI specifications.
+
+**Generated on:** {self.timestamp}
+
+## APIs Included
+{api_list}
+
+## Quick Start
+
+### 1. Add Dependencies
+
+**Maven:**
+```xml
+<dependency>
+    <groupId>com.github.tomakehurst</groupId>
+    <artifactId>wiremock-jre8</artifactId>
+    <version>3.3.1</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+**Gradle:**
+```gradle
+testImplementation 'com.github.tomakehurst:wiremock-jre8:3.3.1'
+testImplementation 'org.springframework.boot:spring-boot-starter-test'
+```
+
+### 2. Use in Tests
+
+**Option 1: Single API**
+```java
+@SpringBootTest
+@Import(ProductsWireMockConfig.class)
+class ProductServiceTest {{
+    @Autowired
+    private String productsApiBaseUrl;
+    
+    @Test
+    void shouldCallProductsApi() {{
+        // Your test here
+    }}
+}}
+```
+
+**Option 2: Multiple APIs**
+```java
+@SpringBootTest
+@Import(WireMockTestConfig.class)
+class IntegrationTest extends BaseWireMockIntegrationTest {{
+    @Test
+    void shouldTestMultipleApis() {{
+        String productsUrl = getProductsBaseUrl();
+        String usersUrl = getUsersBaseUrl();
+        // Test API interactions
+    }}
+}}
+```
+
+**Option 3: Manual Configuration**
+```java
+class ManualTest {{
+    private MultiApiWireMockServer server = new MultiApiWireMockServer();
+    
+    @BeforeEach
+    void setUp() {{
+        server.startAllServers();
+    }}
+    
+    @AfterEach
+    void tearDown() {{
+        server.stopAllServers();
+    }}
+}}
+```
+
+## Generated Classes
+
+### Core Classes
+- `MultiApiWireMockServer` - Main orchestrator for all APIs
+- `WireMockTestConfig` - Spring Boot configuration for all APIs
+- `BaseWireMockIntegrationTest` - Base test class for integration tests
+
+### Per-API Classes
+Each API gets:
+- `<ApiName>WireMockConfig` - Spring configuration for single API
+- `<ApiName>WireMockTest` - Base test class for API-specific tests
+
+## Configuration
+
+### Default Ports
+- Base port: 8080
+- Each API gets: basePort + index (8080, 8081, 8082, etc.)
+
+### WireMock Files
+Place your generated WireMock files in:
+```
+src/test/resources/wiremock/
+├── products/
+│   ├── mappings/
+│   └── __files/
+├── users/
+│   ├── mappings/
+│   └── __files/
+```
+
+## Advanced Usage
+
+### Custom Stubs
+```java
+@Test
+void testWithCustomStub() {{
+    WireMockServer server = getMultiApiServer().getServer("products");
+    
+    server.stubFor(get(urlEqualTo("/custom"))
+        .willReturn(aResponse()
+            .withStatus(200)
+            .withBody("custom response")));
+}}
+```
+
+### Dynamic Configuration
+```java
+@Test
+void testWithDynamicConfig() {{
+    Map<String, String> urls = getMultiApiServer().getServerUrls();
+    urls.forEach((api, url) -> {{
+        // Configure your HTTP clients
+        configureClient(api, url);
+    }});
+}}
+```
+
+### Health Checks
+```java
+@Test
+void allServersHealthy() {{
+    getMultiApiServer().getServerUrls().forEach((api, url) -> {{
+        boolean isRunning = getMultiApiServer().isRunning(api);
+        assertThat(isRunning).isTrue();
+    }});
+}}
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**Port conflicts:**
+```java
+// Check if ports are available
+server.getServerUrls().forEach((api, url) -> 
+    System.out.println(api + " running on: " + url));
+```
+
+**Missing mapping files:**
+```
+Ensure mapping files are in src/test/resources/wiremock/<api_name>/mappings/
+```
+
+**Spring context issues:**
+```java
+// Make sure to import the configuration
+@Import(WireMockTestConfig.class)
+```
+
+## Integration Examples
+
+### RestTemplate
+```java
+@Test
+void testWithRestTemplate() {{
+    RestTemplate restTemplate = new RestTemplate();
+    String url = getProductsBaseUrl() + "/products";
+    
+    ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+}}
+```
+
+### WebTestClient
+```java
+@Test
+void testWithWebTestClient() {{
+    WebTestClient client = WebTestClient.bindToServer()
+        .baseUrl(getUsersBaseUrl())
+        .build();
+        
+    client.get().uri("/users")
+        .exchange()
+        .expectStatus().isOk();
+}}
+```
+
+---
+
+**Generated by Multi-Spec WireMock Mapping Generator**
+'''
+        
+        with open(os.path.join(output_dir, 'README.md'), 'w') as f:
+            f.write(readme_content)
+        
+        print(f"✓ Generated Java README.md")
+    
+    def _to_class_name(self, api_name: str) -> str:
+        """Convert API name to Java class name"""
+        # Split by underscores and capitalize each part
+        parts = api_name.split('_')
+        return ''.join(part.capitalize() for part in parts)
+
+
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: python multi_spec_wiremock_generator.py <spec_directory> <output_directory>")
-        print("Example: python multi_spec_wiremock_generator.py ./spec ./wiremock")
+    parser = argparse.ArgumentParser(
+        description='Multi-Spec WireMock Mapping Generator with Java Code Generation',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+Examples:
+  # Generate only JSON mappings
+  python multi_spec_wiremock_generator.py ./spec ./wiremock
+  
+  # Generate JSON mappings and Java code
+  python multi_spec_wiremock_generator.py ./spec ./wiremock --java
+  
+  # Generate with custom Java package
+  python multi_spec_wiremock_generator.py ./spec ./wiremock --java --package com.mycompany.wiremock
+        '''
+    )
+    
+    parser.add_argument('spec_dir', help='Directory containing OpenAPI specifications')
+    parser.add_argument('output_dir', help='Output directory for generated files')
+    parser.add_argument('--java', action='store_true', 
+                       help='Generate Java WireMock configuration classes')
+    parser.add_argument('--package', default='com.example.wiremock',
+                       help='Java package name for generated classes (default: com.example.wiremock)')
+    
+    # Support legacy command line arguments
+    if len(sys.argv) >= 3 and not sys.argv[1].startswith('-'):
+        # Legacy mode: python script.py <spec_dir> <output_dir>
+        args = parser.parse_args([sys.argv[1], sys.argv[2]] + sys.argv[3:])
+    else:
+        args = parser.parse_args()
+    
+    if not os.path.exists(args.spec_dir):
+        print(f"❌ Spec directory not found: {args.spec_dir}")
         sys.exit(1)
     
-    spec_dir = sys.argv[1]
-    output_dir = sys.argv[2]
-    
-    if not os.path.exists(spec_dir):
-        print(f"❌ Spec directory not found: {spec_dir}")
-        sys.exit(1)
-    
-    generator = MultiSpecWireMockGenerator(spec_dir, output_dir)
+    # Generate JSON mappings
+    generator = MultiSpecWireMockGenerator(args.spec_dir, args.output_dir)
     generator.generate_all_mappings()
+    
+    # Generate Java code if requested
+    if args.java:
+        print(f"\n🔧 Generating Java WireMock integration code...")
+        java_generator = JavaWireMockGenerator(args.package)
+        specs = generator.discover_specs()
+        java_generator.generate_java_code_for_apis(specs, args.output_dir)
 
 
 if __name__ == "__main__":

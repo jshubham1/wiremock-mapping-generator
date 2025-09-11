@@ -1,7 +1,7 @@
 # WireMock OpenAPI Mapping Generator
 # Enhanced Makefile for comprehensive mapping generation
 
-.PHONY: help build start stop restart clean generate logs status test test-scenarios
+.PHONY: help build start stop restart clean generate generate-java logs status test test-scenarios
 
 # Default target
 help:
@@ -13,6 +13,7 @@ help:
 	@echo "  make stop                - Stop all services"
 	@echo "  make restart             - Restart all services"
 	@echo "  make generate            - Generate consolidated mappings for multiple APIs"
+	@echo "  make generate-java       - Generate mappings + Java Spring Boot code"
 	@echo "  make logs                - Show service logs"
 	@echo "  make status              - Show service status"
 	@echo "  make clean               - Clean generated files and containers"
@@ -41,10 +42,25 @@ restart: stop start
 generate:
 	@echo "Generating consolidated WireMock mappings for multiple API specifications..."
 	@echo "This will process all specs in ./spec/ and create organized mappings by API and HTTP method"
-	docker-compose run --rm wiremock-generator sh -c "python3 /scripts/multi_spec_wiremock_generator.py /spec /output"
+	docker-compose run --rm wiremock-generator sh -c "pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pyyaml && python3 /scripts/multi_spec_wiremock_generator.py /spec /output"
 	@echo "Multi-spec mappings generated successfully!"
 	@echo "Check ./wiremock/mappings/{api_name}/ for consolidated mapping files"
 	@echo "Check ./wiremock/__files/{api_name}/ for response files"
+
+# Generate mappings + Java code for Spring Boot integration
+generate-java:
+	@echo "Generating WireMock mappings + Java Spring Boot integration code..."
+	@echo "This will process all specs in ./spec/ and create:"
+	@echo "  - Organized JSON mappings by API and HTTP method"
+	@echo "  - Spring Boot configuration classes"
+	@echo "  - JUnit test base classes"
+	@echo "  - Maven/Gradle build files"
+	docker-compose run --rm wiremock-generator sh -c "pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pyyaml && python3 /scripts/multi_spec_wiremock_generator.py /spec /output --java"
+	@echo "✅ Multi-spec mappings + Java code generated successfully!"
+	@echo "📁 JSON mappings: ./wiremock/mappings/{api_name}/"
+	@echo "📁 Response files: ./wiremock/__files/{api_name}/"
+	@echo "🔥 Java code: ./wiremock/java/"
+	@echo "📖 Java usage guide: ./wiremock/java/README.md"
 
 # Show logs
 logs:

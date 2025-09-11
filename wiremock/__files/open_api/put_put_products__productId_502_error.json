@@ -7,7 +7,7 @@
     }
   ],
   "timestamp": "2024-01-01T12:00:00Z",
-  "traceId": "2ecde9f9-66e3-4e31-986c-6225bdb50919",
+  "traceId": "45f1a447-05d8-4b46-a671-73d3ae51b713",
   "status": 502,
   "path": "Update product by ID"
 }

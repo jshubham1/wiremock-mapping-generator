@@ -5,8 +5,7 @@ services:
     container_name: wiremock-generator
     volumes:
       - ./spec:/spec:ro
-      - ./wiremock/mappings:/output/mappings
-      - ./wiremock/__files:/output/__files
+      - ./wiremock:/output
       - ./scripts:/scripts:ro
     working_dir: /scripts
     command: >

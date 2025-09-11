@@ -1,7 +1,7 @@
 {
   "mappings": [
     {
-      "id": "43071e7a-18c0-44ea-8f08-be60c3ada64d",
+      "id": "bb12fe9f-efde-4e68-8435-ca2c2507c069",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/users/{userId}",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "id": "38a059e6-4ff7-41e3-97c4-6af0f410e42c",
+      "id": "97a83ae7-7278-4b03-af8b-1305e2fa7770",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/users/{userId}",
@@ -52,7 +52,7 @@
       }
     },
     {
-      "id": "351fd243-8006-490e-ab7b-5b037ff6ad8b",
+      "id": "99619145-e3be-44b5-9667-ed765802e99a",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/users/{userId}",
@@ -79,7 +79,7 @@
       }
     },
     {
-      "id": "c441624c-6903-4c91-be92-5183accf20f0",
+      "id": "87009dfe-42be-41cc-92f2-c0c6648554fe",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/users/{userId}",
@@ -106,7 +106,7 @@
       }
     },
     {
-      "id": "84e43a39-b358-4feb-9750-3df72667f470",
+      "id": "b61d38be-d7ab-4a23-8c2d-63e8edee8016",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/users/{userId}",
@@ -133,7 +133,7 @@
       }
     },
     {
-      "id": "b1ecc82c-251b-4742-b898-97444f81173a",
+      "id": "15650dfe-7a9f-4158-b9f4-1daf224bab53",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/users/{userId}",
@@ -160,7 +160,7 @@
       }
     },
     {
-      "id": "c095254d-e546-42f6-91fd-6f3b5b28529c",
+      "id": "2751d258-6edb-449f-b9f4-600fc7b08bc4",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/users/{userId}",
@@ -187,7 +187,7 @@
       }
     },
     {
-      "id": "f6d6fa31-ed67-4e22-b49e-e7606c4b1e16",
+      "id": "4d707496-883e-45fb-8e1e-d0aaef8f91a7",
       "request": {
         "method": "DELETE",
         "urlPathPattern": "/users/{userId}",

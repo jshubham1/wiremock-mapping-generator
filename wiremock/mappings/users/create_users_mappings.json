@@ -1,7 +1,7 @@
 {
   "mappings": [
     {
-      "id": "921c22a7-1237-49c0-882b-fca0a4f9b06f",
+      "id": "e0279cda-74dc-4f25-8bb6-89b0c2dfc165",
       "request": {
         "method": "POST",
         "urlPathPattern": "/users",
@@ -30,7 +30,7 @@
       }
     },
     {
-      "id": "280ee39b-0d83-45b9-9360-eb6137d021cf",
+      "id": "ed80cb6f-83ac-411f-b88f-56bea720d9c9",
       "request": {
         "method": "POST",
         "urlPathPattern": "/users",
@@ -59,7 +59,7 @@
       }
     },
     {
-      "id": "5d04a688-60ea-43d4-af61-641ed71b638a",
+      "id": "c2357ae5-e09a-4deb-841a-73f20fd2166b",
       "request": {
         "method": "POST",
         "urlPathPattern": "/users",
@@ -88,7 +88,7 @@
       }
     },
     {
-      "id": "fc9e1c1e-98f4-4c51-8dfb-b78dbd572428",
+      "id": "38f02a22-a7f8-4263-a463-6c0cdb3ca325",
       "request": {
         "method": "POST",
         "urlPathPattern": "/users",
@@ -117,7 +117,7 @@
       }
     },
     {
-      "id": "172adf2e-e9a5-4ca7-8d3f-f1039050f9ce",
+      "id": "40fb363e-01a8-4837-a330-89ccc49f00d7",
       "request": {
         "method": "POST",
         "urlPathPattern": "/users",
@@ -146,7 +146,7 @@
       }
     },
     {
-      "id": "c2dce007-79c4-4e9d-90b9-6de4a04767ca",
+      "id": "647b416f-7240-4353-b2ea-8549b7615d7b",
       "request": {
         "method": "POST",
         "urlPathPattern": "/users",
@@ -175,7 +175,7 @@
       }
     },
     {
-      "id": "49ff62ac-063b-4ec0-8437-5e081c67be77",
+      "id": "d20af558-63fb-4e20-97fc-1904db0263c0",
       "request": {
         "method": "POST",
         "urlPathPattern": "/users",
@@ -204,7 +204,7 @@
       }
     },
     {
-      "id": "f1500bad-9a32-4aec-b7dd-791cbf9e6f15",
+      "id": "2a1ce672-780f-4b03-8db9-ff298a14b396",
       "request": {
         "method": "POST",
         "urlPathPattern": "/users",
