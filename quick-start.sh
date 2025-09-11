@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# WireMock OpenAPI Setup Script
+# WireMock Multi-Spec OpenAPI Setup Script
 set -e
 
-echo "=== WireMock OpenAPI Mapping Generator Setup ==="
+echo "=== WireMock Multi-Spec Mapping Generator Setup ==="
 echo ""
 
 # Colors for output
@@ -13,57 +13,71 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Check if spec file exists
-if [ ! -f "spec/open-api-spec.json" ] && [ ! -f "spec/open-api-spec.yaml" ]; then
-    echo -e "${RED}Error: OpenAPI spec file not found!${NC}"
-    echo "Please place your OpenAPI specification in the spec/ directory as:"
-    echo "  - open-api-spec.json (recommended)"
-    echo "  - open-api-spec.yaml"
+# Check if any spec files exist
+if [ ! "$(ls -A spec/*.{yaml,yml,json} 2>/dev/null)" ]; then
+    echo -e "${RED}Error: No OpenAPI spec files found in spec/ directory!${NC}"
+    echo "Please place your OpenAPI specifications in the spec/ directory as:"
+    echo "  - any-name.yaml"
+    echo "  - any-name.yml" 
+    echo "  - any-name.json"
+    echo ""
+    echo "🎯 Goal: Drop any OpenAPI spec → automatic mapping generation!"
     exit 1
 fi
 
-# Determine spec file
-SPEC_FILE=""
-if [ -f "spec/open-api-spec.json" ]; then
-    SPEC_FILE="open-api-spec.json"
-elif [ -f "spec/open-api-spec.yaml" ]; then
-    SPEC_FILE="open-api-spec.yaml"
-fi
+# Count spec files
+SPEC_COUNT=$(find spec/ -name "*.yaml" -o -name "*.yml" -o -name "*.json" 2>/dev/null | wc -l | tr -d ' ')
 
-echo -e "${BLUE}Found OpenAPI spec: spec/${SPEC_FILE}${NC}"
+echo -e "${BLUE}Found ${SPEC_COUNT} OpenAPI specification(s) in spec/ directory:${NC}"
+find spec/ -name "*.yaml" -o -name "*.yml" -o -name "*.json" 2>/dev/null | sed 's/^/  - /'
+echo ""
 
-# Generate mappings
-echo -e "${YELLOW}Step 1: Generating WireMock mappings...${NC}"
-python3 scripts/openapi_to_wiremock.py "spec/${SPEC_FILE}" wiremock/mappings wiremock/__files
+# Generate mappings using multi-spec generator
+echo -e "${YELLOW}Step 1: Generating consolidated WireMock mappings for all APIs...${NC}"
+make generate
 
 # Start WireMock
 echo -e "${YELLOW}Step 2: Starting WireMock server...${NC}"
-docker-compose up -d wiremock
+make start
 
 # Wait a moment for startup
-sleep 3
+sleep 5
 
 # Check status
 echo -e "${YELLOW}Step 3: Checking server status...${NC}"
 if curl -sf http://localhost:8080/__admin/health > /dev/null; then
     echo -e "${GREEN}✓ WireMock server is running successfully!${NC}"
     echo ""
-    echo -e "${GREEN}🚀 Your mock API is ready:${NC}"
+    echo -e "${GREEN}🚀 Your multi-spec mock API is ready:${NC}"
     echo -e "  API Base URL:     ${BLUE}http://localhost:8080${NC}"
     echo -e "  Admin Interface:  ${BLUE}http://localhost:8080/__admin${NC}"
     echo -e "  Health Check:     ${BLUE}http://localhost:8080/__admin/health${NC}"
     echo ""
-    echo -e "${GREEN}📊 Available endpoints:${NC}"
-    echo -e "  GET ${BLUE}http://localhost:8080/${NC}     - List API versions"
-    echo -e "  GET ${BLUE}http://localhost:8080/v2${NC}   - Show API version details"
+    echo -e "${GREEN}📊 Generated mappings:${NC}"
+    echo -e "  Total APIs:       ${BLUE}${SPEC_COUNT}${NC}"
+    
+    # Count mapping files
+    MAPPING_COUNT=$(find wiremock/mappings -name "*.json" 2>/dev/null | wc -l | tr -d ' ')
+    echo -e "  Mapping files:    ${BLUE}${MAPPING_COUNT}${NC}"
+    
+    # Show API directories
+    if [ -d "wiremock/mappings" ]; then
+        echo -e "  API directories:${NC}"
+        find wiremock/mappings -type d -mindepth 1 -maxdepth 1 2>/dev/null | sed 's/.*\///g' | sed 's/^/    - /'
+    fi
+    
+    echo ""
+    echo -e "${YELLOW}🎯 Goal achieved: All OpenAPI specs automatically processed!${NC}"
     echo ""
     echo -e "${YELLOW}Quick commands:${NC}"
-    echo "  make test      - Test all endpoints"
-    echo "  make logs      - View server logs"
-    echo "  make stop      - Stop the server"
-    echo "  make restart   - Restart the server"
+    echo "  make test              - Test all endpoints"
+    echo "  make test-scenarios    - Test all error scenarios"
+    echo "  make logs              - View server logs"
+    echo "  make stop              - Stop the server"
+    echo "  make restart           - Restart the server"
+    echo "  make show-mappings     - List all generated mappings"
 else
     echo -e "${RED}✗ WireMock server failed to start${NC}"
-    echo "Check logs with: docker-compose logs"
+    echo "Check logs with: make logs"
     exit 1
 fi
