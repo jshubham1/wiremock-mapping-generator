@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+"""
+WireMock Mapping Generator Web UI Entry Point
+"""
+
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
+
+from src.web.app import create_app
+
+if __name__ == '__main__':
+    app = create_app()
+    print("🚀 Starting WireMock Mapping Generator Web UI...")
+    print(f"📁 Upload folder: {app.config['UPLOAD_FOLDER']}")
+    print(f"🔧 Temp folder: {app.config['TEMP_FOLDER']}")
+    print("🌐 Server will be available at: http://localhost:5001")
+    
+    app.run(debug=True, host='0.0.0.0', port=5001)

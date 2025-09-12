@@ -1,52 +1,87 @@
 # WireMock OpenAPI Mapping Generator
 # Enhanced Makefile for comprehensive mapping generation with Web UI
 
-.PHONY: help build start stop restart clean generate generate-java logs status test test-scenarios full-cycle wait-for-wiremock web-ui start-web stop-web
+.PHONY: help build start stop restart clean generate generate-java logs status test test-scenarios full-cycle wait-for-wiremock web-ui start-web stop-web setup install dev-setup
 
 # Default target
 help:
 	@echo "WireMock Multi-Spec Mapping Generator"
 	@echo "===================================="
 	@echo ""
-	@echo "Available commands:"
+	@echo "Setup commands:"
+	@echo "  make setup               - Install dependencies and setup project"
+	@echo "  make install             - Install Python dependencies"
+	@echo "  make dev-setup           - Setup development environment"
+	@echo ""
+	@echo "CLI commands:"
+	@echo "  make generate            - Generate consolidated mappings for multiple APIs"
+	@echo "  make generate-java       - Generate mappings + Java Spring Boot code"
+	@echo ""
+	@echo "Web UI commands:"
 	@echo "  make web-ui              - Start Web UI for drag & drop mapping generation"
 	@echo "  make web-dev             - Start Web UI in development mode (local Python)"
 	@echo "  make demo                - Interactive demo of the Web UI features"
 	@echo "  make start-web           - Start complete stack with Web UI"
 	@echo "  make stop-web            - Stop Web UI services"
+	@echo ""
+	@echo "WireMock service commands:"
 	@echo "  make start               - Start WireMock with generated mappings"
 	@echo "  make stop                - Stop all services"
 	@echo "  make restart             - Restart all services"
-	@echo "  make generate            - Generate consolidated mappings for multiple APIs"
-	@echo "  make generate-java       - Generate mappings + Java Spring Boot code"
 	@echo "  make logs                - Show service logs"
 	@echo "  make status              - Show service status"
-	@echo "  make clean               - Clean generated files and containers"
+	@echo ""
+	@echo "Testing commands:"
 	@echo "  make test                - Test all generated endpoints dynamically"
 	@echo "  make test-scenarios      - Test all error scenarios across APIs"
 	@echo "  make full-cycle          - Complete workflow: clean→generate+Java→start→wait→test"
+	@echo ""
+	@echo "Utility commands:"
+	@echo "  make clean               - Clean generated files and containers"
 	@echo "  make show-mappings       - List generated mapping files"
 	@echo "  make validate-spec       - Validate OpenAPI specifications"
 	@echo "  make help                - Show this help message"
+
+# Setup Commands
+setup: install
+	@echo "✅ Project setup complete!"
+	@echo "You can now use:"
+	@echo "  ./wiremock-generator --help  (CLI)"
+	@echo "  ./wiremock-web              (Web UI)"
+	@echo "  make web-ui                 (Docker Web UI)"
+
+install:
+	@echo "📦 Installing Python dependencies..."
+	pip3 install -r requirements.txt
+	@echo "✅ Dependencies installed!"
+
+dev-setup: install
+	@echo "🔧 Setting up development environment..."
+	@if [ ! -d "venv" ]; then \
+		python3 -m venv venv; \
+		echo "📁 Virtual environment created"; \
+	fi
+	@echo "🔧 To activate virtual environment run: source venv/bin/activate"
+	@echo "✅ Development environment ready!"
 
 # Web UI Commands
 web-ui:
 	@echo "🌐 Starting WireMock Mapping Generator Web UI..."
 	@echo "This will start a modern web interface for generating mappings"
 	@echo ""
-	./scripts/start-web-ui.sh
+	./src/cli/start-web-ui.sh
 
 web-dev:
 	@echo "🌐 Starting WireMock Mapping Generator Web UI (Development Mode)..."
 	@echo "This will start the web interface using local Python environment"
 	@echo ""
-	./scripts/start-web-dev.sh
+	./wiremock-web
 
 demo:
 	@echo "🎬 Starting Interactive Web UI Demo..."
 	@echo "This will showcase all the features of the modern web interface"
 	@echo ""
-	./scripts/demo-web-ui.sh
+	./src/cli/demo-web-ui.sh
 
 start-web:
 	@echo "🚀 Starting complete stack with Web UI..."
@@ -77,26 +112,26 @@ restart: stop start
 # Generate consolidated mappings for multiple API specs
 generate:
 	@echo "Generating consolidated WireMock mappings for multiple API specifications..."
-	@echo "This will process all specs in ./spec/ and create organized mappings by API and HTTP method"
-	docker-compose run --rm wiremock-generator sh -c "pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r /scripts/requirements.txt && python3 /scripts/multi_spec_wiremock_generator.py /spec /output"
+	@echo "This will process all specs in ./examples/ and create organized mappings by API and HTTP method"
+	./wiremock-generator --spec-dir ./examples --output-dir ./output --verbose
 	@echo "Multi-spec mappings generated successfully!"
-	@echo "Check ./generated/wiremock/mappings/{api_name}/ for consolidated mapping files"
-	@echo "Check ./generated/wiremock/__files/{api_name}/ for response files"
+	@echo "Check ./output/mappings/ for consolidated mapping files"
+	@echo "Check ./output/__files/ for response files"
 
 # Generate mappings + Java code for Spring Boot integration
 generate-java:
 	@echo "Generating WireMock mappings + Java Spring Boot integration code..."
-	@echo "This will process all specs in ./spec/ and create:"
+	@echo "This will process all specs in ./examples/ and create:"
 	@echo "  - Organized JSON mappings by API and HTTP method"
 	@echo "  - Spring Boot configuration classes"
 	@echo "  - JUnit test base classes"
 	@echo "  - Maven/Gradle build files"
-	docker-compose run --rm wiremock-generator sh -c "pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r /scripts/requirements.txt && python3 /scripts/multi_spec_wiremock_generator.py /spec /output --java"
+	./wiremock-generator --spec-dir ./examples --output-dir ./output --include-java --verbose
 	@echo "✅ Multi-spec mappings + Java code generated successfully!"
-	@echo "📁 JSON mappings: ./generated/wiremock/mappings/{api_name}/"
-	@echo "📁 Response files: ./generated/wiremock/__files/{api_name}/"
-	@echo "🔥 Java code: ./generated/wiremock/java/"
-	@echo "📖 Java usage guide: ./generated/wiremock/java/README.md"
+	@echo "📁 JSON mappings: ./output/mappings/"
+	@echo "📁 Response files: ./output/__files/"
+	@echo "🔥 Java code: ./output/java/"
+	@echo "📖 Java usage guide: ./output/java/README.md"
 
 # Show logs
 logs:

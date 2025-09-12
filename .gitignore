@@ -1,25 +1,20 @@
-# Generated files (all output from build process)
+# Generated files and outputs
+output/
+*.zip
+
+# Web App temporary files  
+src/web/uploads/*
+src/web/temp/*
+!src/web/uploads/.gitkeep
+!src/web/temp/.gitkeep
+
+# Legacy generated files (to be cleaned up)
 generated/
+wiremock/
 
-# Keep the generated directory structure but ignore all contents
-!generated/
-!generated/wiremock/
-!generated/wiremock/mappings/
-!generated/wiremock/__files/
-!generated/wiremock/java/
-!generated/wiremock/mappings/.gitkeep
-!generated/wiremock/__files/.gitkeep
-
-# Explicitly ignore all generated content
-generated/wiremock/mappings/**/
-generated/wiremock/__files/**/
-generated/wiremock/java/**/
-
-# Web App temporary files
+# Legacy web app files (to be cleaned up)
 web-app/uploads/*
 web-app/temp/*
-!web-app/uploads/.gitkeep
-!web-app/temp/.gitkeep
 
 # Docker
 .env.local

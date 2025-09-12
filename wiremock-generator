@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""
+WireMock Mapping Generator CLI
+Main entry point for command-line operations
+"""
+
+import sys
+import argparse
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
+
+from src.core.multi_spec_wiremock_generator import MultiSpecWireMockGenerator, JavaWireMockGenerator
+
+def main():
+    """Main CLI entry point"""
+    parser = argparse.ArgumentParser(description="Generate WireMock mappings from OpenAPI specifications")
+    parser.add_argument("--spec-dir", required=True, help="Directory containing OpenAPI spec files")
+    parser.add_argument("--output-dir", required=True, help="Output directory for generated mappings")
+    parser.add_argument("--include-java", action="store_true", help="Generate Java code as well")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+    
+    args = parser.parse_args()
+    
+    if args.verbose:
+        print(f"🔧 Generating WireMock mappings...")
+        print(f"📂 Spec directory: {args.spec_dir}")
+        print(f"📁 Output directory: {args.output_dir}")
+        print(f"☕ Include Java: {args.include_java}")
+    
+    try:
+        # Generate mappings
+        generator = MultiSpecWireMockGenerator(args.spec_dir, args.output_dir)
+        generator.generate_all_mappings()
+        
+        if args.verbose:
+            print("✅ WireMock mappings generated successfully")
+        
+        # Generate Java code if requested
+        if args.include_java:
+            if args.verbose:
+                print("🔧 Generating Java code...")
+            
+            specs = generator.discover_specs()
+            if specs:
+                java_generator = JavaWireMockGenerator()
+                java_generator.generate_java_code_for_apis(specs, args.output_dir)
+                
+                if args.verbose:
+                    print("✅ Java code generated successfully")
+            else:
+                print("⚠️  No specs found for Java generation")
+        
+        if args.verbose:
+            print("🎉 All generation completed successfully!")
+            
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()

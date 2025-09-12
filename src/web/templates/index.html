@@ -452,7 +452,7 @@
                 formData.append('generateJava', outputType === 'json-java');
                 formData.append('javaPackage', document.getElementById('javaPackage').value);
 
-                const response = await fetch('/upload', {
+                const response = await fetch('/api/upload', {
                     method: 'POST',
                     body: formData
                 });
@@ -469,7 +469,7 @@
                     
                     // Now generate the mappings
                     const outputType = document.querySelector('input[name="outputType"]:checked').value;
-                    const generateResponse = await fetch('/generate', {
+                    const generateResponse = await fetch('/api/generate', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -530,7 +530,7 @@
         // Modal buttons
         document.getElementById('downloadBtn').addEventListener('click', function() {
             if (currentSessionId) {
-                window.location.href = `/download/${currentSessionId}`;
+                window.location.href = `/api/download/${currentSessionId}`;
             }
         });
 

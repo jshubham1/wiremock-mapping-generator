@@ -1,0 +1,75 @@
+services:
+  # Web UI for WireMock mapping generation
+  wiremock-web-ui:
+    build:
+      context: ./web-app
+      dockerfile: Dockerfile
+    container_name: wiremock-web-ui
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./scripts:/app/scripts:ro
+      - ./spec:/app/default-specs:ro
+      - ./generated:/app/generated
+    environment:
+      - FLASK_ENV=production
+      - PYTHONPATH=/app
+    depends_on:
+      - wiremock
+    networks:
+      - wiremock-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Generator service to create mappings from OpenAPI specs
+  wiremock-generator:
+    image: python:3.11-slim
+    container_name: wiremock-generator
+    volumes:
+      - ./spec:/spec:ro
+      - ./generated/wiremock:/output
+      - ./scripts:/scripts:ro
+    working_dir: /scripts
+    command: >
+      sh -c "
+        echo 'Installing dependencies...' &&
+        pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r /scripts/requirements.txt &&
+        echo 'Generating Multi-Spec WireMock stubs from OpenAPI specifications...' &&
+        python3 /scripts/multi_spec_wiremock_generator.py /spec /output &&
+        echo 'Multi-spec generation completed successfully!'
+      "
+    networks:
+      - wiremock-network
+
+  # WireMock server
+  wiremock:
+    image: wiremock/wiremock:3.3.1
+    container_name: wiremock-server
+    ports:
+      - "${WIREMOCK_PORT:-8080}:8080"
+    volumes:
+      - ./generated/wiremock/mappings:/home/wiremock/mappings
+      - ./generated/wiremock/__files:/home/wiremock/__files
+    environment:
+      - WIREMOCK_OPTIONS=${WIREMOCK_OPTIONS:---global-response-templating --verbose}
+    command: >
+      --port 8080
+      --root-dir /home/wiremock
+      --global-response-templating
+      --verbose
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/__admin/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    networks:
+      - wiremock-network
+
+networks:
+  wiremock-network:
+    driver: bridge
