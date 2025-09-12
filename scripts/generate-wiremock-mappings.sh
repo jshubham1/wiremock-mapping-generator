@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Script to generate WireMock mappings from OpenAPI specification
+# Script to generate WireMock mappings from multiple OpenAPI specifications
 set -e
 
-echo "=== WireMock OpenAPI Mapping Generator ==="
+echo "=== Multi-Spec WireMock Mapping Generator ==="
 
 # Configuration
-SPEC_FILE="/spec/open-api-spec.yaml"
+SPEC_DIR="/spec"
 MAPPINGS_DIR="/output/mappings"
 FILES_DIR="/output/__files"
 
@@ -14,17 +14,17 @@ FILES_DIR="/output/__files"
 mkdir -p "$MAPPINGS_DIR"
 mkdir -p "$FILES_DIR"
 
-# Check if OpenAPI spec exists
-if [ ! -f "$SPEC_FILE" ]; then
-    echo "Error: OpenAPI spec file not found at $SPEC_FILE"
+# Check if spec directory exists
+if [ ! -d "$SPEC_DIR" ]; then
+    echo "Error: Spec directory not found at $SPEC_DIR"
     exit 1
 fi
 
-echo "Processing OpenAPI spec: $SPEC_FILE"
+echo "Processing OpenAPI specs from: $SPEC_DIR"
 
-# Parse the OpenAPI spec and generate mappings using Enhanced Python script
-echo "Using Enhanced OpenAPI to WireMock Generator..."
-python3 /scripts/enhanced_openapi_to_wiremock.py "$SPEC_FILE" "$MAPPINGS_DIR" "$FILES_DIR"
+# Parse the OpenAPI spec and generate mappings using Multi-Spec Python script
+echo "Using Multi-Spec WireMock Generator..."
+python3 /scripts/multi_spec_wiremock_generator.py /spec /output
 
 echo "=== Mapping generation completed ==="
 echo "Mappings saved to: $MAPPINGS_DIR"
