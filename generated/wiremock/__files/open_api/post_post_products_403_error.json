@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "code": "FORBIDDEN",
+      "message": "You do not have permission to access this resource",
+      "details": "Insufficient privileges for this operation"
+    }
+  ],
+  "timestamp": "2024-01-01T12:00:00Z",
+  "traceId": "1dfdf7e3-7c68-4b51-8c21-b639530bb772",
+  "status": 403,
+  "path": "Create a new product"
+}

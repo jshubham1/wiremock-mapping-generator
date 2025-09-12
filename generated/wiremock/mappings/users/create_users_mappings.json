@@ -1,0 +1,236 @@
+{
+  "mappings": [
+    {
+      "id": "d0f90b4b-327a-49ef-8664-e2a127bf4610",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/users",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*happy_path.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "success",
+        "operation_id": "createUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "dedda5f3-fc4b-45d4-8bae-79c0dcaf9188",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/users",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*created_success.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/post_createUser_201_response.json"
+      },
+      "metadata": {
+        "scenario": "created",
+        "operation_id": "createUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "78eaa15b-ca90-4810-a525-0a31d9430399",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/users",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*unauthorized_access.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/post_createUser_401_error.json"
+      },
+      "metadata": {
+        "scenario": "unauthorized",
+        "operation_id": "createUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "87e4c918-eae1-4e2e-9503-7f33c13b2f3e",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/users",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*forbidden_access.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/post_createUser_403_error.json"
+      },
+      "metadata": {
+        "scenario": "forbidden",
+        "operation_id": "createUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "162f5ab5-101c-4a88-ae38-69b3a397b202",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/users",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*not_found_error.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/post_createUser_404_error.json"
+      },
+      "metadata": {
+        "scenario": "not_found",
+        "operation_id": "createUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "5bf9ba7a-4a17-4712-9602-d1de98263c8a",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/users",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*server_error.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/post_createUser_500_error.json"
+      },
+      "metadata": {
+        "scenario": "server_error",
+        "operation_id": "createUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "314c5817-d89d-4271-a275-801cf620a1a9",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/users",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*bad_gateway.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/post_createUser_502_error.json"
+      },
+      "metadata": {
+        "scenario": "bad_gateway",
+        "operation_id": "createUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "7e2419c2-433f-4cfb-b172-b81cb89e6608",
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/users",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*service_unavailable.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/post_createUser_503_error.json"
+      },
+      "metadata": {
+        "scenario": "service_unavailable",
+        "operation_id": "createUser",
+        "api_name": "users"
+      }
+    }
+  ]
+}

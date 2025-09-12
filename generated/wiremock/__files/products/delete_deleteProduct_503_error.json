@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "code": "SERVICE_UNAVAILABLE",
+      "message": "Service is temporarily unavailable",
+      "details": "The service is currently undergoing maintenance or experiencing high load"
+    }
+  ],
+  "timestamp": "2024-01-01T12:00:00Z",
+  "traceId": "76f24a0f-0d84-4cbf-a4fc-ff5c1e2037b4",
+  "status": 503,
+  "path": "Delete product"
+}

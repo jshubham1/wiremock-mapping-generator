@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "code": "SERVICE_UNAVAILABLE",
+      "message": "Service is temporarily unavailable",
+      "details": "The service is currently undergoing maintenance or experiencing high load"
+    }
+  ],
+  "timestamp": "2024-01-01T12:00:00Z",
+  "traceId": "00ed2fb8-ec32-4a64-a075-21066a355522",
+  "status": 503,
+  "path": "Get user by ID"
+}

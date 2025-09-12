@@ -1,0 +1,430 @@
+{
+  "mappings": [
+    {
+      "id": "74925116-ef60-40bd-b0f9-c2f2bf4d191d",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUsers_200_response.json"
+      },
+      "metadata": {
+        "scenario": "success",
+        "operation_id": "getUsers",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "a860a984-770e-4eac-83bf-e25b8c9fafa7",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "created_success"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "created",
+        "operation_id": "getUsers",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "7fc68c94-f7ce-4556-9d0f-96509101da91",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "unauthorized_access"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUsers_401_error.json"
+      },
+      "metadata": {
+        "scenario": "unauthorized",
+        "operation_id": "getUsers",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "1dc230ca-de9a-43b8-85b1-216b6e472657",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "forbidden_access"
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUsers_403_error.json"
+      },
+      "metadata": {
+        "scenario": "forbidden",
+        "operation_id": "getUsers",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "c59f3ed7-0bd6-4148-a788-93fc16d04d89",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "not_found_error"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUsers_404_error.json"
+      },
+      "metadata": {
+        "scenario": "not_found",
+        "operation_id": "getUsers",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "538e9b0c-48f9-4def-a906-259c7c33664d",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "server_error"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUsers_500_error.json"
+      },
+      "metadata": {
+        "scenario": "server_error",
+        "operation_id": "getUsers",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "1ad8440d-7d27-4cd9-be44-4228edbc4798",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "bad_gateway"
+          }
+        }
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUsers_502_error.json"
+      },
+      "metadata": {
+        "scenario": "bad_gateway",
+        "operation_id": "getUsers",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "c1dc1966-33cb-4081-8d2e-3f7365c73e1c",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "service_unavailable"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUsers_503_error.json"
+      },
+      "metadata": {
+        "scenario": "service_unavailable",
+        "operation_id": "getUsers",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "5ca3247a-a5f9-4464-9be4-832217eb1b50",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUserById_200_response.json"
+      },
+      "metadata": {
+        "scenario": "success",
+        "operation_id": "getUserById",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "3991c560-dc1e-40bf-af90-30017abb4cd6",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "created_success"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "created",
+        "operation_id": "getUserById",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "48331313-3db0-4f91-9df0-f4304329ae90",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "unauthorized_access"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUserById_401_error.json"
+      },
+      "metadata": {
+        "scenario": "unauthorized",
+        "operation_id": "getUserById",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "5582525e-128b-4bfa-ac95-75ec017d2276",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "forbidden_access"
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUserById_403_error.json"
+      },
+      "metadata": {
+        "scenario": "forbidden",
+        "operation_id": "getUserById",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "0bfa07cd-03e8-4386-8bbb-87901da889a0",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "not_found_error"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUserById_404_error.json"
+      },
+      "metadata": {
+        "scenario": "not_found",
+        "operation_id": "getUserById",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "5b4d700e-ec5d-4a8e-a1e2-331cab07f0b2",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "server_error"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUserById_500_error.json"
+      },
+      "metadata": {
+        "scenario": "server_error",
+        "operation_id": "getUserById",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "b43a2560-5d82-465b-8ab5-3fcc4b40b168",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "bad_gateway"
+          }
+        }
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUserById_502_error.json"
+      },
+      "metadata": {
+        "scenario": "bad_gateway",
+        "operation_id": "getUserById",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "281ff184-7a9c-470a-8ef0-a6edc2c9976a",
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/users/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "service_unavailable"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/get_getUserById_503_error.json"
+      },
+      "metadata": {
+        "scenario": "service_unavailable",
+        "operation_id": "getUserById",
+        "api_name": "users"
+      }
+    }
+  ]
+}

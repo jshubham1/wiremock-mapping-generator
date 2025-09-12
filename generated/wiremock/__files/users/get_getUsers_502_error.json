@@ -1,0 +1,13 @@
+{
+  "errors": [
+    {
+      "code": "BAD_GATEWAY",
+      "message": "Invalid response from upstream server",
+      "details": "The server received an invalid response from an upstream server"
+    }
+  ],
+  "timestamp": "2024-01-01T12:00:00Z",
+  "traceId": "213c4344-56f3-4aaf-8b0b-701f9ace4eb6",
+  "status": 502,
+  "path": "Get all users"
+}

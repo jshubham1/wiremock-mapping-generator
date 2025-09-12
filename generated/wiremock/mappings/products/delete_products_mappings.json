@@ -1,0 +1,217 @@
+{
+  "mappings": [
+    {
+      "id": "e3bf0c9d-fc83-4ee4-b5ff-cebc6c979193",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/delete_deleteProduct_200_response.json"
+      },
+      "metadata": {
+        "scenario": "success",
+        "operation_id": "deleteProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "1c5334db-bdd1-456e-b70d-26b93c213b9c",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "created_success"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "created",
+        "operation_id": "deleteProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "abe4f55d-f645-4b8c-8836-928188a32bf9",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "unauthorized_access"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/delete_deleteProduct_401_error.json"
+      },
+      "metadata": {
+        "scenario": "unauthorized",
+        "operation_id": "deleteProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "f9ee26f8-58a6-4adb-a9ef-d5a24c0a9c58",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "forbidden_access"
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/delete_deleteProduct_403_error.json"
+      },
+      "metadata": {
+        "scenario": "forbidden",
+        "operation_id": "deleteProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "4be0a847-b2b6-4065-a295-b1c939e89481",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "not_found_error"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/delete_deleteProduct_404_error.json"
+      },
+      "metadata": {
+        "scenario": "not_found",
+        "operation_id": "deleteProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "de9124b1-5f8a-412f-913d-657715d8a537",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "server_error"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/delete_deleteProduct_500_error.json"
+      },
+      "metadata": {
+        "scenario": "server_error",
+        "operation_id": "deleteProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "55f748f4-63c4-48c9-9b47-523af382ee9b",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "bad_gateway"
+          }
+        }
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/delete_deleteProduct_502_error.json"
+      },
+      "metadata": {
+        "scenario": "bad_gateway",
+        "operation_id": "deleteProduct",
+        "api_name": "products"
+      }
+    },
+    {
+      "id": "ee681714-1c93-4f27-9085-e03afdc46cb0",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "service_unavailable"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "products/delete_deleteProduct_503_error.json"
+      },
+      "metadata": {
+        "scenario": "service_unavailable",
+        "operation_id": "deleteProduct",
+        "api_name": "products"
+      }
+    }
+  ]
+}

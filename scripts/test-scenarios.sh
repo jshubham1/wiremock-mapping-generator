@@ -7,7 +7,7 @@ set -e
 
 WIREMOCK_URL="http://localhost:8080"
 TIMEOUT=5
-MAPPINGS_DIR="./wiremock/mappings"
+MAPPINGS_DIR="./generated/wiremock/mappings"
 
 # Colors for output
 RED='\033[0;31m'

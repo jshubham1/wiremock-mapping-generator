@@ -29,6 +29,9 @@ make generate
 make start
 
 # Your APIs are now mocked at http://localhost:8080
+
+# Or run the complete workflow in one command:
+make full-cycle
 ```
 
 ## Project Structure
@@ -39,15 +42,24 @@ spec/                           # Your OpenAPI specifications
 ├── users-api.yaml              # YAML and JSON supported
 └── orders-api.json             # Unlimited APIs
 
-wiremock/                       # Generated output
-├── mappings/                   # Organized by API
-│   ├── products/               # Consolidated by HTTP method
-│   │   ├── get_products_mappings.json
-│   │   ├── create_products_mappings.json
-│   │   └── ...
-│   └── users/
-└── __files/                    # Response files
-    ├── products/               # Realistic JSON responses
+scripts/                        # Shell scripts and generators
+├── test-scenarios.sh           # Dynamic test suite
+├── quick-start.sh              # Quick setup script
+├── generate-wiremock-mappings.sh
+└── multi_spec_wiremock_generator.py
+
+generated/                      # All generated content
+└── wiremock/                   # WireMock artifacts
+    ├── mappings/               # Organized by API
+    │   ├── products/           # Consolidated by HTTP method
+    │   │   ├── get_products_mappings.json
+    │   │   ├── create_products_mappings.json
+    │   │   └── ...
+    │   └── users/
+    └── __files/                # Response files
+        ├── products/           # Realistic JSON responses
+        └── users/
+```
     └── users/
 ```
 
@@ -62,6 +74,7 @@ make start       # Start WireMock server
 make stop        # Stop WireMock server
 make clean       # Remove generated files (including Java code)
 make test        # Test all generated endpoints dynamically
+make full-cycle  # Complete workflow: clean→generate→start→validate→test
 ```
 ```
 

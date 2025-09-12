@@ -1,0 +1,217 @@
+{
+  "mappings": [
+    {
+      "id": "03f8bf50-69d8-4a5a-a83e-90c2699ec2e4",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "success",
+        "operation_id": "delete_products__productId",
+        "api_name": "open_api"
+      }
+    },
+    {
+      "id": "bddd7f19-3938-4756-be1d-2a3c5a254582",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "created_success"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "created",
+        "operation_id": "delete_products__productId",
+        "api_name": "open_api"
+      }
+    },
+    {
+      "id": "67cd3ab2-f1cf-45f5-aaa5-7d0c7c177f70",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "unauthorized_access"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "open_api/delete_delete_products__productId_401_error.json"
+      },
+      "metadata": {
+        "scenario": "unauthorized",
+        "operation_id": "delete_products__productId",
+        "api_name": "open_api"
+      }
+    },
+    {
+      "id": "c54cb779-e564-42bd-97f1-be598d9b94fa",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "forbidden_access"
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "open_api/delete_delete_products__productId_403_error.json"
+      },
+      "metadata": {
+        "scenario": "forbidden",
+        "operation_id": "delete_products__productId",
+        "api_name": "open_api"
+      }
+    },
+    {
+      "id": "e2bb763d-c00f-412d-9d60-24771d268dfa",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "not_found_error"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "open_api/delete_delete_products__productId_404_error.json"
+      },
+      "metadata": {
+        "scenario": "not_found",
+        "operation_id": "delete_products__productId",
+        "api_name": "open_api"
+      }
+    },
+    {
+      "id": "aa48e3e6-f767-44af-b8c5-130a4f41c97e",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "server_error"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "open_api/delete_delete_products__productId_500_error.json"
+      },
+      "metadata": {
+        "scenario": "server_error",
+        "operation_id": "delete_products__productId",
+        "api_name": "open_api"
+      }
+    },
+    {
+      "id": "76088286-d289-4dc3-8ea0-e3ffcb0c4996",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "bad_gateway"
+          }
+        }
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "open_api/delete_delete_products__productId_502_error.json"
+      },
+      "metadata": {
+        "scenario": "bad_gateway",
+        "operation_id": "delete_products__productId",
+        "api_name": "open_api"
+      }
+    },
+    {
+      "id": "94449d01-93cc-47b5-98cf-18abd52539ba",
+      "request": {
+        "method": "DELETE",
+        "urlPathPattern": "/products/[^/]+",
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          },
+          "X-Test-Scenario": {
+            "equalTo": "service_unavailable"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "open_api/delete_delete_products__productId_503_error.json"
+      },
+      "metadata": {
+        "scenario": "service_unavailable",
+        "operation_id": "delete_products__productId",
+        "api_name": "open_api"
+      }
+    }
+  ]
+}

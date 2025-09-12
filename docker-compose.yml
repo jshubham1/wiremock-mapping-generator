@@ -5,7 +5,7 @@ services:
     container_name: wiremock-generator
     volumes:
       - ./spec:/spec:ro
-      - ./wiremock:/output
+      - ./generated/wiremock:/output
       - ./scripts:/scripts:ro
     working_dir: /scripts
     command: >
@@ -26,8 +26,8 @@ services:
     ports:
       - "${WIREMOCK_PORT:-8080}:8080"
     volumes:
-      - ./wiremock/mappings:/home/wiremock/mappings
-      - ./wiremock/__files:/home/wiremock/__files
+      - ./generated/wiremock/mappings:/home/wiremock/mappings
+      - ./generated/wiremock/__files:/home/wiremock/__files
     environment:
       - WIREMOCK_OPTIONS=${WIREMOCK_OPTIONS:---global-response-templating --verbose}
     command: >

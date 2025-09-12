@@ -1,0 +1,14 @@
+{
+  "products": [
+    {
+      "id": "EPTEB4034A4D44D",
+      "name": "example_name",
+      "description": "example_string",
+      "price": 99.99,
+      "stock": 10,
+      "createdAt": "2024-01-01T12:00:00Z",
+      "updatedAt": "2024-01-01T12:00:00Z"
+    }
+  ],
+  "total": 123
+}

@@ -1,0 +1,236 @@
+{
+  "mappings": [
+    {
+      "id": "51cc4d36-35a5-4591-b0a1-f9e1446775f4",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/users/[^/]+",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*happy_path.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/put_updateUser_200_response.json"
+      },
+      "metadata": {
+        "scenario": "success",
+        "operation_id": "updateUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "194dad5f-effc-444b-8961-dbffc141762e",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/users/[^/]+",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*created_success.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Success\"}"
+      },
+      "metadata": {
+        "scenario": "created",
+        "operation_id": "updateUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "1b30a9dc-1e49-43c5-9ba0-a6d4cec214cb",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/users/[^/]+",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*unauthorized_access.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/put_updateUser_401_error.json"
+      },
+      "metadata": {
+        "scenario": "unauthorized",
+        "operation_id": "updateUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "1d2db362-3100-49e0-a2ea-25f86de658bf",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/users/[^/]+",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*forbidden_access.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/put_updateUser_403_error.json"
+      },
+      "metadata": {
+        "scenario": "forbidden",
+        "operation_id": "updateUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "2357d690-08e4-4423-ba54-24256cfb5a34",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/users/[^/]+",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*not_found_error.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/put_updateUser_404_error.json"
+      },
+      "metadata": {
+        "scenario": "not_found",
+        "operation_id": "updateUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "b3752dd9-e3fb-4ed9-a9ae-2e924a434fcb",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/users/[^/]+",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*server_error.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/put_updateUser_500_error.json"
+      },
+      "metadata": {
+        "scenario": "server_error",
+        "operation_id": "updateUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "5be85fcf-2d52-4f9e-92f6-b35073fcd822",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/users/[^/]+",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*bad_gateway.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/put_updateUser_502_error.json"
+      },
+      "metadata": {
+        "scenario": "bad_gateway",
+        "operation_id": "updateUser",
+        "api_name": "users"
+      }
+    },
+    {
+      "id": "57ca152e-2acf-4fbe-a3e1-c622ae12870e",
+      "request": {
+        "method": "PUT",
+        "urlPathPattern": "/users/[^/]+",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@..* =~ /.*service_unavailable.*/i)]"
+          }
+        ],
+        "headers": {
+          "Accept": {
+            "contains": "json"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "users/put_updateUser_503_error.json"
+      },
+      "metadata": {
+        "scenario": "service_unavailable",
+        "operation_id": "updateUser",
+        "api_name": "users"
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "EPT50B6E4AB7C04",
+  "name": "example_name",
+  "category": "example_string",
+  "price": 99.99,
+  "stock": 10,
+  "createdAt": "2024-01-01T12:00:00Z"
+}

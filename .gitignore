@@ -1,13 +1,18 @@
 # Generated WireMock files
-wiremock/mappings/*.json
-wiremock/__files/*.json
+generated/wiremock/mappings/*.json
+generated/wiremock/__files/*.json
 
 # Keep directory structure
-!wiremock/mappings/.gitkeep
-!wiremock/__files/.gitkeep
+!generated/wiremock/mappings/.gitkeep
+!generated/wiremock/__files/.gitkeep
+
+# Generated Java code
+generated/wiremock/java/src/
 
 # Docker
 .env.local
+.env.enhanced
+.env.example
 docker-compose.override.yml
 
 # Logs
