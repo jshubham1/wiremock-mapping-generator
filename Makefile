@@ -77,17 +77,19 @@ clean:
 	docker-compose rm -f
 	rm -rf ./wiremock/mappings/*
 	rm -rf ./wiremock/__files/*
+	rm -rf ./wiremock/java/src/main/java/com/
+	rm -rf ./wiremock/java/src/test/java/com/
 	@echo "Cleanup completed!"
 
 # Test the generated endpoints with different scenarios
 test:
 	@echo "Testing generated WireMock endpoints..."
 	@echo ""
-	@echo "Testing POST /credit-transfer-order-requests (Success scenario)"
-	@curl -s -w "\nStatus: %{http_code}\n" -X POST http://localhost:8080/credit-transfer-order-requests \
-		-H "Content-Type: application/json" \
-		-H "Authorization: Bearer valid-token" \
-		-d '{"amount": 100}' || echo "Service not running"
+	@if [ ! -d "./wiremock/mappings" ] || [ -z "$$(find ./wiremock/mappings -name '*.json' -type f)" ]; then \
+		echo "No mappings found. Please run 'make generate' first."; \
+		exit 1; \
+	fi
+	@./scripts/test-scenarios.sh
 	@echo ""
 	@echo "WireMock Admin Interface:"
 	@echo "http://localhost:8080/__admin"

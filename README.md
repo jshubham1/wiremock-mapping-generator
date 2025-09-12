@@ -56,25 +56,56 @@ wiremock/                       # Generated output
 ### Available Commands
 
 ```bash
-make generate    # Process all specs and generate mappings
+```bash
+make generate    # Generate mappings
 make start       # Start WireMock server
 make stop        # Stop WireMock server
-make clean       # Remove generated files
-make test        # Test endpoints
+make clean       # Remove generated files (including Java code)
+make test        # Test all generated endpoints dynamically
+```
 ```
 
 ### Testing Endpoints
 
+The project now includes dynamic testing that automatically discovers and tests all generated endpoints:
+
+```bash
+# Test all generated endpoints automatically
+make test
+
+# Or run the test script directly
+./scripts/test-scenarios.sh
+```
+
+The test suite will:
+- 🔍 **Auto-discover** all generated mapping files
+- 🧪 **Test each scenario** with appropriate payloads  
+- ✅ **Validate responses** against expected status codes
+- 📊 **Provide summary** of passed/failed tests
+
+**Requirements**: `jq` must be installed for JSON processing
+```bash
+# Install jq (macOS)
+brew install jq
+
+# Install jq (Ubuntu/Debian)
+sudo apt-get install jq
+```
+
+### Manual Testing Examples
+
 ```bash
 # Success scenarios
-curl -X GET http://localhost:8080/products \
+curl -X PUT http://localhost:8080/users/123 \
   -H "Accept: application/json" \
-  -d '{"scenario": "happy_path"}'
+  -H "Content-Type: application/json" \
+  -d '{"name": "happy_path", "email": "test@example.com"}'
 
 # Error scenarios  
-curl -X GET http://localhost:8080/products \
+curl -X PUT http://localhost:8080/users/123 \
   -H "Accept: application/json" \
-  -d '{"scenario": "server_error"}'  # Returns 500
+  -H "Content-Type: application/json" \
+  -d '{"name": "server_error", "email": "test@example.com"}'  # Returns 500
 ```
 
 ### Scenario Types
