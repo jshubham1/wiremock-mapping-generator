@@ -15,6 +15,12 @@ generated/wiremock/mappings/**/
 generated/wiremock/__files/**/
 generated/wiremock/java/**/
 
+# Web App temporary files
+web-app/uploads/*
+web-app/temp/*
+!web-app/uploads/.gitkeep
+!web-app/temp/.gitkeep
+
 # Docker
 .env.local
 docker-compose.override.yml

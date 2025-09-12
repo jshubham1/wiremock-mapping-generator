@@ -1,7 +1,7 @@
 # WireMock OpenAPI Mapping Generator
-# Enhanced Makefile for comprehensive mapping generation
+# Enhanced Makefile for comprehensive mapping generation with Web UI
 
-.PHONY: help build start stop restart clean generate generate-java logs status test test-scenarios full-cycle wait-for-wiremock
+.PHONY: help build start stop restart clean generate generate-java logs status test test-scenarios full-cycle wait-for-wiremock web-ui start-web stop-web
 
 # Default target
 help:
@@ -9,6 +9,11 @@ help:
 	@echo "===================================="
 	@echo ""
 	@echo "Available commands:"
+	@echo "  make web-ui              - Start Web UI for drag & drop mapping generation"
+	@echo "  make web-dev             - Start Web UI in development mode (local Python)"
+	@echo "  make demo                - Interactive demo of the Web UI features"
+	@echo "  make start-web           - Start complete stack with Web UI"
+	@echo "  make stop-web            - Stop Web UI services"
 	@echo "  make start               - Start WireMock with generated mappings"
 	@echo "  make stop                - Stop all services"
 	@echo "  make restart             - Restart all services"
@@ -23,6 +28,36 @@ help:
 	@echo "  make show-mappings       - List generated mapping files"
 	@echo "  make validate-spec       - Validate OpenAPI specifications"
 	@echo "  make help                - Show this help message"
+
+# Web UI Commands
+web-ui:
+	@echo "🌐 Starting WireMock Mapping Generator Web UI..."
+	@echo "This will start a modern web interface for generating mappings"
+	@echo ""
+	./scripts/start-web-ui.sh
+
+web-dev:
+	@echo "🌐 Starting WireMock Mapping Generator Web UI (Development Mode)..."
+	@echo "This will start the web interface using local Python environment"
+	@echo ""
+	./scripts/start-web-dev.sh
+
+demo:
+	@echo "🎬 Starting Interactive Web UI Demo..."
+	@echo "This will showcase all the features of the modern web interface"
+	@echo ""
+	./scripts/demo-web-ui.sh
+
+start-web:
+	@echo "🚀 Starting complete stack with Web UI..."
+	docker-compose up --build -d
+	@echo ""
+	@echo "🌐 Web UI: http://localhost:5000"
+	@echo "⚙️  WireMock Admin: http://localhost:8080/__admin"
+
+stop-web:
+	@echo "🛑 Stopping Web UI services..."
+	docker-compose down
 
 # Start all services (generate mappings and start WireMock)
 start:

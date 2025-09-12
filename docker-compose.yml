@@ -1,4 +1,30 @@
 services:
+  # Web UI for WireMock mapping generation
+  wiremock-web-ui:
+    build:
+      context: ./web-app
+      dockerfile: Dockerfile
+    container_name: wiremock-web-ui
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./scripts:/app/scripts:ro
+      - ./spec:/app/default-specs:ro
+      - ./generated:/app/generated
+    environment:
+      - FLASK_ENV=production
+      - PYTHONPATH=/app
+    depends_on:
+      - wiremock
+    networks:
+      - wiremock-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
   # Generator service to create mappings from OpenAPI specs
   wiremock-generator:
     image: python:3.11-slim

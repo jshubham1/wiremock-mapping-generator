@@ -2,6 +2,8 @@
 
 Automatically generate WireMock mappings from multiple OpenAPI specifications with zero configuration. Drop your API specs into a directory and get comprehensive mock servers with realistic responses.
 
+**🌐 NEW: Web UI Available!** - Modern drag-and-drop interface at `make web-ui`
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0+-green.svg)](https://swagger.io/specification/)
 [![WireMock](https://img.shields.io/badge/WireMock-3.3.1-blue.svg)](http://wiremock.org/)
@@ -9,15 +11,28 @@ Automatically generate WireMock mappings from multiple OpenAPI specifications wi
 
 ## Features
 
+- **🌐 Modern Web UI**: Drag-and-drop interface with real-time progress and ZIP downloads
 - **Zero Configuration**: Drop OpenAPI specs in `/spec` directory and run
 - **Multi-API Support**: Process unlimited APIs simultaneously  
 - **Comprehensive Coverage**: 8 HTTP status codes per endpoint (200, 201, 401, 403, 404, 500, 502, 503)
 - **Docker Ready**: Full containerization with Docker Compose
 - **Organized Output**: API-specific folders with consolidated mappings
 - **Realistic Responses**: Spec-compliant JSON responses with examples
+- **Java Integration**: Optional Spring Boot & JUnit code generation
 
 ## Quick Start
 
+### Option 1: Web UI (Recommended)
+```bash
+# Start the modern web interface
+make web-ui
+
+# Open http://localhost:5000 in your browser
+# Drag & drop your OpenAPI files
+# Generate and download mappings
+```
+
+### Option 2: Command Line
 ```bash
 # 1. Add your OpenAPI specs
 cp your-api-spec.yaml spec/
@@ -55,26 +70,80 @@ generated/                      # All generated content
     │   │   ├── create_products_mappings.json
     │   │   └── ...
     │   └── users/
-    └── __files/                # Response files
-        ├── products/           # Realistic JSON responses
-        └── users/
+    ├── __files/                # Response files
+    │   ├── products/           # Realistic JSON responses
+    │   └── users/
+    └── java/                   # Generated Java code (optional)
+        ├── src/main/java/      # Spring Boot configuration
+        ├── src/test/java/      # JUnit test bases
+        ├── pom.xml             # Maven build file
+        └── build.gradle        # Gradle build file
+
+web-app/                        # Modern Web UI
+├── app.py                      # Flask application
+├── templates/index.html        # Responsive web interface
+├── Dockerfile                  # Container configuration
+└── README.md                   # Web UI documentation
+```
+
+## Web UI Features
+
+### 🎨 Modern Interface
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Drag & Drop**: Simply drag OpenAPI files onto the interface
+- **Real-time Progress**: Visual feedback during generation
+- **Instant Downloads**: Get ZIP packages immediately
+
+### 📁 File Management
+- **Multi-format Support**: YAML (.yaml, .yml) and JSON files
+- **Batch Upload**: Process multiple API specs simultaneously
+- **File Validation**: Automatic type and size checking (max 16MB)
+- **Smart Organization**: Generated files organized by API
+
+### ⚙️ Generation Options
+- **JSON Only**: WireMock mappings for immediate use
+- **JSON + Java**: Include Spring Boot & JUnit integration
+- **Custom Packages**: Specify Java package names
+- **Download Packages**: Complete ZIP with documentation
+
+### 🔧 Technical Features
+- **Session Management**: Unique sessions for concurrent users
+- **Auto Cleanup**: Temporary files cleaned automatically
+- **Health Monitoring**: Built-in health checks
+- **Error Handling**: Comprehensive error reporting
 ```
     └── users/
 ```
 
 ## Usage
 
+### Web UI Interface
+
+```bash
+# Start the modern web interface
+make web-ui
+
+# Access at http://localhost:5000
+# Features:
+# - Drag & drop OpenAPI files
+# - Choose JSON only or JSON + Java generation
+# - Real-time progress tracking
+# - Download ZIP packages
+# - Mobile-responsive design
+```
+
 ### Available Commands
 
 ```bash
-```bash
-make generate    # Generate mappings
-make start       # Start WireMock server
-make stop        # Stop WireMock server
-make clean       # Remove generated files (including Java code)
-make test        # Test all generated endpoints dynamically
-make full-cycle  # Complete workflow: clean→generate→start→validate→test
-```
+make web-ui          # Start Web UI for drag & drop generation
+make start-web       # Start complete stack with Web UI
+make stop-web        # Stop Web UI services
+make generate        # Generate mappings (CLI)
+make start           # Start WireMock server
+make stop            # Stop WireMock server
+make clean           # Remove generated files (including Java code)
+make test            # Test all generated endpoints dynamically
+make full-cycle      # Complete workflow: clean→generate→start→validate→test
 ```
 
 ### Testing Endpoints
