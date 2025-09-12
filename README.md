@@ -45,7 +45,6 @@ spec/                           # Your OpenAPI specifications
 scripts/                        # Shell scripts and generators
 ├── test-scenarios.sh           # Dynamic test suite
 ├── quick-start.sh              # Quick setup script
-├── generate-wiremock-mappings.sh
 └── multi_spec_wiremock_generator.py
 
 generated/                      # All generated content

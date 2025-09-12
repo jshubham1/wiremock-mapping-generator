@@ -10,8 +10,8 @@ services:
     working_dir: /scripts
     command: >
       sh -c "
-        echo 'Installing PyYAML for YAML support...' &&
-        pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pyyaml &&
+        echo 'Installing dependencies...' &&
+        pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r /scripts/requirements.txt &&
         echo 'Generating Multi-Spec WireMock stubs from OpenAPI specifications...' &&
         python3 /scripts/multi_spec_wiremock_generator.py /spec /output &&
         echo 'Multi-spec generation completed successfully!'
@@ -41,9 +41,6 @@ services:
       timeout: 10s
       retries: 5
       start_period: 40s
-    # depends_on:
-    #   wiremock-generator:
-    #     condition: service_completed_successfully
     networks:
       - wiremock-network
 

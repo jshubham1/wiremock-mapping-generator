@@ -1366,13 +1366,13 @@ def main():
         epilog='''
 Examples:
   # Generate only JSON mappings
-  python multi_spec_wiremock_generator.py ./spec ./wiremock
+  python multi_spec_wiremock_generator.py ./spec ./generated/wiremock
   
   # Generate JSON mappings and Java code
-  python multi_spec_wiremock_generator.py ./spec ./wiremock --java
+  python multi_spec_wiremock_generator.py ./spec ./generated/wiremock --java
   
   # Generate with custom Java package
-  python multi_spec_wiremock_generator.py ./spec ./wiremock --java --package com.mycompany.wiremock
+  python multi_spec_wiremock_generator.py ./spec ./generated/wiremock --java --package com.mycompany.wiremock
         '''
     )
     

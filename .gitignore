@@ -17,8 +17,6 @@ generated/wiremock/java/**/
 
 # Docker
 .env.local
-.env.enhanced
-.env.example
 docker-compose.override.yml
 
 # Logs
