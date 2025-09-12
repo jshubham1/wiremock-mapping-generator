@@ -1,13 +1,14 @@
-# Generated WireMock files
-generated/wiremock/mappings/*.json
-generated/wiremock/__files/*.json
+# Generated files (all output from build process)
+generated/
 
-# Keep directory structure
+# Keep the generated directory structure but ignore all contents
+!generated/
+!generated/wiremock/
+!generated/wiremock/mappings/
+!generated/wiremock/__files/
+!generated/wiremock/java/
 !generated/wiremock/mappings/.gitkeep
 !generated/wiremock/__files/.gitkeep
-
-# Generated Java code
-generated/wiremock/java/src/
 
 # Docker
 .env.local

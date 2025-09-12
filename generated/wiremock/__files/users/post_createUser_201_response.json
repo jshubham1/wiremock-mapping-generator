@@ -1,8 +1,0 @@
-{
-  "id": "user-003",
-  "username": "new.user",
-  "email": "new.user@example.com",
-  "role": "user",
-  "active": true,
-  "createdAt": "2024-01-03T12:00:00Z"
-}

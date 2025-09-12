@@ -1,8 +1,0 @@
-{
-  "id": "prod-123",
-  "name": "Wireless Headphones",
-  "category": "electronics",
-  "price": 99.99,
-  "stock": 25,
-  "createdAt": "2024-01-01T10:00:00Z"
-}

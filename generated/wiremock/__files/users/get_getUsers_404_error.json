@@ -1,8 +1,0 @@
-{
-  "errors": [
-    {
-      "code": "USER_NOT_FOUND",
-      "message": "User not found"
-    }
-  ]
-}
