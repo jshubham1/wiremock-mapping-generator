@@ -806,29 +806,12 @@ make generate 2>&1 | grep ERROR
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## � Promotion & Community
-
-### Official Recognition
-- 🎯 **Submitted to OpenAPI Generator**: Proposal for official WireMock mapping generator
-- 🤝 **WireMock Community**: Featured in WireMock ecosystem discussions
-- 📢 **Open Source Promotion**: Active in developer communities
-
-### Media Coverage
-- 📝 **Blog Posts**: Technical articles on API mocking strategies
-- 🎥 **Video Demos**: YouTube tutorials and conference talks
-- 🐦 **Social Media**: Twitter, LinkedIn, and dev community engagement
-
-## �🙏 Acknowledgments
+##  Acknowledgments
 
 - [WireMock](http://wiremock.org/) - Powerful HTTP mocking framework
 - [OpenAPI](https://swagger.io/specification/) - API specification standard
 - [Docker](https://www.docker.com/) - Containerization platform
-- [OpenAPI Generator](https://openapi-generator.tech/) - Code generation inspiration
 
 ---
 
 **⭐ Star this repository if it helps your project!**
-
-**🤝 Contributions welcome - Help make this tool even better!**
-
-**📢 Share this tool with your team and community!**

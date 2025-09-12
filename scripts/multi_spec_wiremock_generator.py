@@ -273,9 +273,13 @@ class MultiSpecWireMockGenerator:
     
     def create_scenario_request_matcher(self, method: str, path: str, status_code: int, scenario_id: str) -> Dict[str, Any]:
         """Create request matcher for specific scenario"""
+        # Convert OpenAPI path parameters to WireMock regex patterns
+        # {paramName} -> [^/]+
+        wiremock_path = re.sub(r'\{[^}]+\}', '[^/]+', path)
+        
         matcher = {
             "method": method.upper(),
-            "urlPathPattern": path
+            "urlPathPattern": wiremock_path
         }
         
         # Add headers for scenario identification
