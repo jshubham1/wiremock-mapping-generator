@@ -48,6 +48,21 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-6">
+                    <!-- WireMock Server Links -->
+                    <div class="hidden sm:flex items-center space-x-4">
+                        <a href="http://localhost:8080/__admin" target="_blank" 
+                           class="flex items-center space-x-2 text-sm text-gray-600 hover:text-wiremock transition-colors"
+                           title="WireMock Admin Dashboard">
+                            <i class="fas fa-server"></i>
+                            <span>WireMock Admin</span>
+                        </a>
+                        <a href="http://localhost:8080" target="_blank" 
+                           class="flex items-center space-x-2 text-sm text-gray-600 hover:text-wiremock transition-colors"
+                           title="WireMock Server">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>Mock Server</span>
+                        </a>
+                    </div>
                     <div class="flex items-center space-x-2">
                         <i class="fab fa-docker text-2xl text-blue-600"></i>
                         <i class="fas fa-code text-2xl text-java"></i>
@@ -225,6 +240,66 @@
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WireMock Server Section -->
+        <div class="mt-12 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-200">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center justify-center">
+                    <i class="fas fa-server text-blue-600 mr-3"></i>
+                    WireMock Server Integration
+                </h3>
+                <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
+                    Access your running WireMock server directly. Manage mappings, view requests, and test your APIs in real-time.
+                </p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                    <!-- WireMock Admin -->
+                    <a href="http://localhost:8080/__admin" target="_blank" 
+                       class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-blue-300 group">
+                        <div class="text-center">
+                            <i class="fas fa-tachometer-alt text-3xl text-blue-600 mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="font-semibold text-gray-900 mb-2">Admin Dashboard</h4>
+                            <p class="text-sm text-gray-500">Manage mappings & settings</p>
+                        </div>
+                    </a>
+                    
+                    <!-- Server Status -->
+                    <a href="http://localhost:8080/__admin/health" target="_blank" 
+                       class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-green-300 group">
+                        <div class="text-center">
+                            <i class="fas fa-heartbeat text-3xl text-green-600 mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="font-semibold text-gray-900 mb-2">Health Check</h4>
+                            <p class="text-sm text-gray-500">Server status & info</p>
+                        </div>
+                    </a>
+                    
+                    <!-- Request Logs -->
+                    <a href="http://localhost:8080/__admin/requests" target="_blank" 
+                       class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-orange-300 group">
+                        <div class="text-center">
+                            <i class="fas fa-list-alt text-3xl text-orange-600 mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="font-semibold text-gray-900 mb-2">Request Logs</h4>
+                            <p class="text-sm text-gray-500">View incoming requests</p>
+                        </div>
+                    </a>
+                    
+                    <!-- Mock Server -->
+                    <a href="http://localhost:8080" target="_blank" 
+                       class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-purple-300 group">
+                        <div class="text-center">
+                            <i class="fas fa-external-link-alt text-3xl text-purple-600 mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="font-semibold text-gray-900 mb-2">Mock Server</h4>
+                            <p class="text-sm text-gray-500">Test your endpoints</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="mt-6 text-sm text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Start WireMock server with: <code class="bg-gray-200 px-2 py-1 rounded">docker-compose up wiremock</code>
                 </div>
             </div>
         </div>

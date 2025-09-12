@@ -7,7 +7,7 @@ set -e
 
 WIREMOCK_URL="http://localhost:8080"
 TIMEOUT=5
-MAPPINGS_DIR="./generated/wiremock/mappings"
+MAPPINGS_DIR="./output/mappings"
 
 # Colors for output
 RED='\033[0;31m'
@@ -221,27 +221,47 @@ test_all_apis() {
     
     echo -e "${BLUE}🔍 Discovering test cases from mapping files...${NC}"
     
+    # Check if mappings directory exists
+    if [ ! -d "$MAPPINGS_DIR" ]; then
+        echo -e "${RED}❌ Mappings directory not found: $MAPPINGS_DIR${NC}"
+        echo -e "${YELLOW}💡 Run 'make generate' first to create mappings${NC}"
+        return 1
+    fi
+    
     # Find all mapping files
     local test_cases_file=$(mktemp)
     
-    for api_dir in "$MAPPINGS_DIR"/*; do
-        if [ -d "$api_dir" ]; then
-            local api_name=$(basename "$api_dir")
-            echo -e "${BLUE}📁 Processing API: $api_name${NC}"
-            
-            for mapping_file in "$api_dir"/*.json; do
-                if [ -f "$mapping_file" ]; then
-                    extract_test_cases "$mapping_file" "$api_name" >> "$test_cases_file"
-                fi
-            done
-        fi
-    done
+    # Handle both flat structure and subdirectory structure
+    if ls "$MAPPINGS_DIR"/*.json >/dev/null 2>&1; then
+        # Flat structure - JSON files directly in mappings/
+        for mapping_file in "$MAPPINGS_DIR"/*.json; do
+            if [ -f "$mapping_file" ]; then
+                local api_name=$(basename "$mapping_file" .json | sed 's/_.*$//')
+                extract_test_cases "$mapping_file" "$api_name" >> "$test_cases_file"
+            fi
+        done
+    else
+        # Subdirectory structure - JSON files in API subdirectories
+        for api_dir in "$MAPPINGS_DIR"/*; do
+            if [ -d "$api_dir" ]; then
+                local api_name=$(basename "$api_dir")
+                echo -e "${BLUE}📁 Processing API: $api_name${NC}"
+                
+                for mapping_file in "$api_dir"/*.json; do
+                    if [ -f "$mapping_file" ]; then
+                        extract_test_cases "$mapping_file" "$api_name" >> "$test_cases_file"
+                    fi
+                done
+            fi
+        done
+    fi
     
     # Count total test cases
     total_tests=$(wc -l < "$test_cases_file")
     
     if [ "$total_tests" -eq 0 ]; then
         echo -e "${RED}❌ No test cases found in mapping files${NC}"
+        echo -e "${YELLOW}💡 Make sure you have generated mappings with valid JSON structure${NC}"
         rm -f "$test_cases_file"
         return 1
     fi
