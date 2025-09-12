@@ -1,16 +1,22 @@
 services:
   # Web UI for WireMock mapping generation
   wiremock-web-ui:
-    build:
-      context: ./web-app
-      dockerfile: Dockerfile
+    image: python:3.11-slim
     container_name: wiremock-web-ui
     ports:
-      - "5000:5000"
+      - "5001:5001"
     volumes:
-      - ./scripts:/app/scripts:ro
-      - ./spec:/app/default-specs:ro
-      - ./generated:/app/generated
+      - ./src:/app/src:ro
+      - ./examples:/app/examples:ro
+      - ./output:/app/output
+      - ./requirements.txt:/app/requirements.txt:ro
+      - ./wiremock-web:/app/wiremock-web:ro
+    working_dir: /app
+    command: >
+      sh -c "
+        pip install -r requirements.txt &&
+        python wiremock-web
+      "
     environment:
       - FLASK_ENV=production
       - PYTHONPATH=/app
@@ -19,7 +25,7 @@ services:
     networks:
       - wiremock-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -30,16 +36,17 @@ services:
     image: python:3.11-slim
     container_name: wiremock-generator
     volumes:
-      - ./spec:/spec:ro
-      - ./generated/wiremock:/output
-      - ./scripts:/scripts:ro
-    working_dir: /scripts
+      - ./examples:/examples:ro
+      - ./output:/output
+      - ./src:/src:ro
+      - ./requirements.txt:/requirements.txt:ro
+    working_dir: /
     command: >
       sh -c "
         echo 'Installing dependencies...' &&
-        pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r /scripts/requirements.txt &&
+        pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt &&
         echo 'Generating Multi-Spec WireMock stubs from OpenAPI specifications...' &&
-        python3 /scripts/multi_spec_wiremock_generator.py /spec /output &&
+        python3 -m src.core.multi_spec_wiremock_generator --spec-dir /examples --output-dir /output &&
         echo 'Multi-spec generation completed successfully!'
       "
     networks:
@@ -52,8 +59,8 @@ services:
     ports:
       - "${WIREMOCK_PORT:-8080}:8080"
     volumes:
-      - ./generated/wiremock/mappings:/home/wiremock/mappings
-      - ./generated/wiremock/__files:/home/wiremock/__files
+      - ./output/mappings:/home/wiremock/mappings
+      - ./output/__files:/home/wiremock/__files
     environment:
       - WIREMOCK_OPTIONS=${WIREMOCK_OPTIONS:---global-response-templating --verbose}
     command: >
