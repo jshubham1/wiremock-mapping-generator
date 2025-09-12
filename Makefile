@@ -1,7 +1,7 @@
 # WireMock OpenAPI Mapping Generator
 # Enhanced Makefile for comprehensive mapping generation
 
-.PHONY: help build start stop restart clean generate generate-java logs status test test-scenarios full-cycle
+.PHONY: help build start stop restart clean generate generate-java logs status test test-scenarios full-cycle wait-for-wiremock
 
 # Default target
 help:
@@ -19,7 +19,7 @@ help:
 	@echo "  make clean               - Clean generated files and containers"
 	@echo "  make test                - Test all generated endpoints dynamically"
 	@echo "  make test-scenarios      - Test all error scenarios across APIs"
-	@echo "  make full-cycle          - Complete workflow: clean→generate+Java→start→validate→test"
+	@echo "  make full-cycle          - Complete workflow: clean→generate+Java→start→wait→test"
 	@echo "  make show-mappings       - List generated mapping files"
 	@echo "  make validate-spec       - Validate OpenAPI specifications"
 	@echo "  make help                - Show this help message"
@@ -129,15 +129,33 @@ validate-spec:
 		fi; \
 	done
 
-# Complete workflow: clean, generate with Java code, start, validate and test
-full-cycle: clean validate-spec generate-java start test
+# Complete workflow: clean, generate with Java code, start, wait for startup, validate and test
+full-cycle: clean validate-spec generate-java start wait-for-wiremock test
 	@echo ""
 	@echo -e "\033[0;32m🎉 Full cycle completed successfully!\033[0m"
 	@echo "✅ Cleaned old artifacts"
 	@echo "✅ Validated OpenAPI specifications" 
 	@echo "✅ Generated new mappings + Java code"
 	@echo "✅ Started WireMock server"
+	@echo "✅ Waited for WireMock to be ready"
 	@echo "✅ Tested all endpoints"
 	@echo ""
 	@echo "🔗 WireMock server: http://localhost:8080"
 	@echo "⚙️  Admin interface: http://localhost:8080/__admin"
+
+# Wait for WireMock to be ready
+wait-for-wiremock:
+	@echo "⏳ Waiting for WireMock to start..."
+	@for i in $$(seq 1 30); do \
+		if curl -s -f http://localhost:8080/__admin/mappings >/dev/null 2>&1; then \
+			echo "✅ WireMock is ready!"; \
+			sleep 2; \
+			break; \
+		fi; \
+		echo "   Attempt $$i/30: WireMock not ready yet, waiting 2 seconds..."; \
+		sleep 2; \
+		if [ $$i -eq 30 ]; then \
+			echo "❌ WireMock failed to start within 60 seconds"; \
+			exit 1; \
+		fi; \
+	done
