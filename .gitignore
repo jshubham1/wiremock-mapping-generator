@@ -10,6 +10,11 @@ generated/
 !generated/wiremock/mappings/.gitkeep
 !generated/wiremock/__files/.gitkeep
 
+# Explicitly ignore all generated content
+generated/wiremock/mappings/**/
+generated/wiremock/__files/**/
+generated/wiremock/java/**/
+
 # Docker
 .env.local
 .env.enhanced
