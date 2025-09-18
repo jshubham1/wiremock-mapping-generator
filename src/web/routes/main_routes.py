@@ -23,7 +23,7 @@ def create_main_blueprint():
         
         # Generate new session ID
         session_id = str(uuid.uuid4())
-        return render_template('index.html', session_id=session_id)
+        return render_template('index_new.html', session_id=session_id)
     
     @bp.route('/health')
     def health_check():

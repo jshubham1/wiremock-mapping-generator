@@ -2,6 +2,7 @@
 
 import os
 import uuid
+import requests
 from flask import Blueprint, request, jsonify, send_file, current_app
 from werkzeug.exceptions import RequestEntityTooLarge
 from src.web.services.file_service import FileService
@@ -154,5 +155,105 @@ def create_api_blueprint():
     def internal_error(e):
         """Handle internal server error"""
         return jsonify({'error': 'Internal server error'}), 500
-    
+
+    @bp.route('/wiremock/status', methods=['GET'])
+    def get_wiremock_status():
+        """Get WireMock server status"""
+        try:
+            response = requests.get('http://localhost:8080/__admin/health', timeout=5)
+            return jsonify({
+                'status': 'running' if response.status_code == 200 else 'error',
+                'url': 'http://localhost:8080'
+            })
+        except requests.RequestException:
+            return jsonify({
+                'status': 'stopped',
+                'url': 'http://localhost:8080'
+            })
+
+    @bp.route('/wiremock/mappings/count', methods=['GET'])
+    def get_wiremock_mappings_count():
+        """Get count of WireMock mappings"""
+        try:
+            response = requests.get('http://localhost:8080/__admin/mappings', timeout=5)
+            if response.status_code == 200:
+                mappings = response.json().get('mappings', [])
+                return jsonify({'count': len(mappings)})
+            else:
+                return jsonify({'count': 0, 'error': 'Failed to fetch mappings'})
+        except requests.RequestException:
+            return jsonify({'count': 0, 'error': 'WireMock server not available'})
+
+    @bp.route('/wiremock/requests/count', methods=['GET'])
+    def get_wiremock_requests_count():
+        """Get count of WireMock requests"""
+        try:
+            response = requests.get('http://localhost:8080/__admin/requests', timeout=5)
+            if response.status_code == 200:
+                requests_data = response.json().get('requests', [])
+                return jsonify({'count': len(requests_data)})
+            else:
+                return jsonify({'count': 0, 'error': 'Failed to fetch requests'})
+        except requests.RequestException:
+            return jsonify({'count': 0, 'error': 'WireMock server not available'})
+
+    @bp.route('/mappings/<session_id>', methods=['GET'])
+    def get_session_mappings(session_id):
+        """Get generated mappings for a session to upload to WireMock"""
+        try:
+            # Validate session ID format
+            try:
+                uuid.UUID(session_id)
+            except ValueError:
+                return jsonify({'error': 'Invalid session ID format'}), 400
+            
+            session_temp_dir = os.path.join(current_app.config['TEMP_FOLDER'], session_id)
+            if not os.path.exists(session_temp_dir):
+                return jsonify({'error': 'Session not found or expired'}), 404
+            
+            # Look for mappings directory
+            mappings_dir = os.path.join(session_temp_dir, 'mappings')
+            if not os.path.exists(mappings_dir):
+                return jsonify({'error': 'No mappings found for session'}), 404
+            
+            mappings = []
+            response_files = {}
+            
+            # Read all mapping files
+            for root, dirs, files in os.walk(mappings_dir):
+                for file in files:
+                    if file.endswith('.json'):
+                        file_path = os.path.join(root, file)
+                        try:
+                            with open(file_path, 'r', encoding='utf-8') as f:
+                                import json
+                                mapping_data = json.load(f)
+                                mappings.append(mapping_data)
+                        except Exception as e:
+                            print(f"Warning: Could not read mapping file {file_path}: {e}")
+            
+            # Read response files from __files directory
+            files_dir = os.path.join(session_temp_dir, '__files')
+            if os.path.exists(files_dir):
+                for root, dirs, files in os.walk(files_dir):
+                    for file in files:
+                        if file.endswith('.json'):
+                            file_path = os.path.join(root, file)
+                            try:
+                                with open(file_path, 'r', encoding='utf-8') as f:
+                                    # Get relative path for WireMock
+                                    rel_path = os.path.relpath(file_path, files_dir)
+                                    response_files[rel_path] = f.read()
+                            except Exception as e:
+                                print(f"Warning: Could not read response file {file_path}: {e}")
+            
+            return jsonify({
+                'mappings': mappings,
+                'responseFiles': response_files,
+                'count': len(mappings)
+            })
+            
+        except Exception as e:
+            return jsonify({'error': f'Failed to retrieve mappings: {str(e)}'}), 500
+
     return bp

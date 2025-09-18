@@ -1,6 +1,8 @@
 # Generated files and outputs
 output/
+__files/
 *.zip
+*.jar
 
 # Web App temporary files  
 src/web/uploads/*

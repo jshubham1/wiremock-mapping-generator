@@ -1,0 +1,18 @@
+# Railway Deployment Configuration
+# Deploy to: https://railway.app
+
+services:
+  web:
+    build:
+      dockerfile: deploy/docker/Dockerfile.web
+    environment:
+      - PORT=5001
+      - FLASK_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    ports:
+      - "5001:5001"

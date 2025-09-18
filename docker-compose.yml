@@ -4,9 +4,9 @@ services:
     image: python:3.11-slim
     container_name: wiremock-web-ui
     ports:
-      - "5001:5001"
+      - "${WEB_UI_PORT:-5001}:5001"
     volumes:
-      - ./src:/app/src:ro
+      - ./src:/app/src
       - ./examples:/app/examples:ro
       - ./output:/app/output
       - ./requirements.txt:/app/requirements.txt:ro
@@ -14,12 +14,15 @@ services:
     working_dir: /app
     command: >
       sh -c "
-        pip install -r requirements.txt &&
+        pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt &&
+        echo '🌐 Starting Flask Web UI on port 5001...' &&
         python wiremock-web
       "
     environment:
-      - FLASK_ENV=production
-      - PYTHONPATH=/app
+      - FLASK_ENV=${FLASK_ENV:-development}
+      - FLASK_DEBUG=${FLASK_DEBUG:-1}
+      - PYTHONPATH=${PYTHONPATH:-/app}
+      - WIREMOCK_URL=${WIREMOCK_URL:-http://wiremock:8080}
     depends_on:
       - wiremock
     networks:
@@ -29,7 +32,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 15s
 
   # Generator service to create mappings from OpenAPI specs
   wiremock-generator:
@@ -52,9 +55,9 @@ services:
     networks:
       - wiremock-network
 
-  # WireMock server
+  # WireMock server with CORS support
   wiremock:
-    image: wiremock/wiremock:3.3.1
+    image: wiremock/wiremock:3.13.1
     container_name: wiremock-server
     ports:
       - "${WIREMOCK_PORT:-8080}:8080"
@@ -62,18 +65,19 @@ services:
       - ./output/mappings:/home/wiremock/mappings
       - ./output/__files:/home/wiremock/__files
     environment:
-      - WIREMOCK_OPTIONS=${WIREMOCK_OPTIONS:---global-response-templating --verbose}
+      - WIREMOCK_OPTIONS=${WIREMOCK_OPTIONS:---global-response-templating --enable-browser-proxying --verbose}
     command: >
       --port 8080
       --root-dir /home/wiremock
       --global-response-templating
+      --enable-browser-proxying
       --verbose
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/__admin/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     networks:
       - wiremock-network
 

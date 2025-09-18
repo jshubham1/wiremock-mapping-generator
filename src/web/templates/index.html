@@ -216,7 +216,7 @@
 
         <!-- Success Modal -->
         <div id="successModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-            <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+            <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">
                 <div class="mt-3 text-center">
                     <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
                         <i class="fas fa-check text-green-600 text-xl"></i>
@@ -224,6 +224,25 @@
                     <h3 class="text-lg font-medium text-gray-900">Generation Complete!</h3>
                     <div class="mt-4 px-7 py-3">
                         <div id="summaryContent" class="text-sm text-gray-600 space-y-2"></div>
+                        
+                        <!-- WireMock Quick Actions -->
+                        <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <h4 class="text-sm font-semibold text-blue-900 mb-3 flex items-center">
+                                <i class="fas fa-server text-blue-600 mr-2"></i>
+                                WireMock Quick Actions
+                            </h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="openWireMockAdmin()" 
+                                        class="text-xs px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                                    <i class="fas fa-tachometer-alt mr-1"></i>Admin Portal
+                                </button>
+                                <button onclick="testLiveAPIs()" 
+                                        class="text-xs px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
+                                    <i class="fas fa-play-circle mr-1"></i>Test APIs
+                                </button>
+                            </div>
+                        </div>
+                        
                         <div class="mt-6 flex justify-center space-x-3">
                             <button 
                                 id="downloadBtn"
@@ -250,54 +269,121 @@
                 <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center justify-center">
                     <i class="fas fa-server text-blue-600 mr-3"></i>
                     WireMock Server Integration
+                    <span id="serverStatus" class="ml-3 px-2 py-1 text-xs rounded-full"></span>
                 </h3>
                 <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
                     Access your running WireMock server directly. Manage mappings, view requests, and test your APIs in real-time.
                 </p>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                    <!-- WireMock Admin -->
-                    <a href="http://localhost:8080/__admin" target="_blank" 
-                       class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-blue-300 group">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto mb-6">
+                    <!-- WireMock Admin Dashboard -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-blue-300 group cursor-pointer"
+                         onclick="openWireMockAdmin()">
                         <div class="text-center">
                             <i class="fas fa-tachometer-alt text-3xl text-blue-600 mb-3 group-hover:scale-110 transition-transform"></i>
-                            <h4 class="font-semibold text-gray-900 mb-2">Admin Dashboard</h4>
-                            <p class="text-sm text-gray-500">Manage mappings & settings</p>
+                            <h4 class="font-semibold text-gray-900 mb-2">Admin Portal</h4>
+                            <p class="text-sm text-gray-500">Full admin interface</p>
                         </div>
-                    </a>
+                    </div>
                     
-                    <!-- Server Status -->
-                    <a href="http://localhost:8080/__admin/health" target="_blank" 
-                       class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-green-300 group">
+                    <!-- Server Status & Health -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-green-300 group cursor-pointer"
+                         onclick="checkServerHealth()">
                         <div class="text-center">
                             <i class="fas fa-heartbeat text-3xl text-green-600 mb-3 group-hover:scale-110 transition-transform"></i>
                             <h4 class="font-semibold text-gray-900 mb-2">Health Check</h4>
                             <p class="text-sm text-gray-500">Server status & info</p>
                         </div>
-                    </a>
+                    </div>
                     
                     <!-- Request Logs -->
-                    <a href="http://localhost:8080/__admin/requests" target="_blank" 
-                       class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-orange-300 group">
+                    <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-orange-300 group cursor-pointer"
+                         onclick="viewRequestLogs()">
                         <div class="text-center">
                             <i class="fas fa-list-alt text-3xl text-orange-600 mb-3 group-hover:scale-110 transition-transform"></i>
                             <h4 class="font-semibold text-gray-900 mb-2">Request Logs</h4>
                             <p class="text-sm text-gray-500">View incoming requests</p>
                         </div>
-                    </a>
+                    </div>
                     
-                    <!-- Mock Server -->
-                    <a href="http://localhost:8080" target="_blank" 
-                       class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-purple-300 group">
+                    <!-- Mappings Management -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-purple-300 group cursor-pointer"
+                         onclick="manageMappings()">
                         <div class="text-center">
-                            <i class="fas fa-external-link-alt text-3xl text-purple-600 mb-3 group-hover:scale-110 transition-transform"></i>
-                            <h4 class="font-semibold text-gray-900 mb-2">Mock Server</h4>
-                            <p class="text-sm text-gray-500">Test your endpoints</p>
+                            <i class="fas fa-cogs text-3xl text-purple-600 mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="font-semibold text-gray-900 mb-2">Mappings</h4>
+                            <p class="text-sm text-gray-500">Manage active mappings</p>
                         </div>
-                    </a>
+                    </div>
+                </div>
+
+                <!-- Advanced Admin Controls -->
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 max-w-4xl mx-auto mb-6">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-chart-bar text-gray-600 mr-2"></i>
+                        Server Statistics
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="serverStats">
+                        <!-- Statistics will be loaded here -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl font-bold text-gray-400">-</div>
+                            <div class="text-sm text-gray-600">Active Mappings</div>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl font-bold text-gray-400">-</div>
+                            <div class="text-sm text-gray-600">Total Requests</div>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl font-bold text-gray-400">-</div>
+                            <div class="text-sm text-gray-600">Server Uptime</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-tools text-gray-600 mr-2"></i>
+                        Quick Admin Actions
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Reset Mappings -->
+                        <button onclick="resetMappings()" 
+                                class="flex items-center justify-center px-4 py-3 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors group">
+                            <i class="fas fa-trash text-red-600 mr-2 group-hover:scale-110 transition-transform"></i>
+                            <span class="text-red-700 font-medium">Reset All Mappings</span>
+                        </button>
+                        
+                        <!-- Reload Mappings -->
+                        <button onclick="reloadMappings()" 
+                                class="flex items-center justify-center px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors group">
+                            <i class="fas fa-sync text-blue-600 mr-2 group-hover:scale-110 transition-transform"></i>
+                            <span class="text-blue-700 font-medium">Reload Mappings</span>
+                        </button>
+                        
+                        <!-- View Scenarios -->
+                        <button onclick="viewScenarios()" 
+                                class="flex items-center justify-center px-4 py-3 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors group">
+                            <i class="fas fa-sitemap text-green-600 mr-2 group-hover:scale-110 transition-transform"></i>
+                            <span class="text-green-700 font-medium">View Scenarios</span>
+                        </button>
+                        
+                        <!-- Test Live APIs -->
+                        <button onclick="testLiveAPIs()" 
+                                class="flex items-center justify-center px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors group">
+                            <i class="fas fa-play-circle text-yellow-600 mr-2 group-hover:scale-110 transition-transform"></i>
+                            <span class="text-yellow-700 font-medium">Test Live APIs</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="mt-6 text-sm text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Start WireMock server with: <code class="bg-gray-200 px-2 py-1 rounded">docker-compose up wiremock</code>
+                </div>
+            </div>
+        </div>
                     <i class="fas fa-info-circle mr-1"></i>
                     Start WireMock server with: <code class="bg-gray-200 px-2 py-1 rounded">docker-compose up wiremock</code>
                 </div>
@@ -469,14 +555,22 @@
             });
         }
 
+        function updateGenerateButton() {
+            generateBtn.disabled = selectedFiles.length === 0;
+        }
+
         function removeFile(index) {
             selectedFiles.splice(index, 1);
             updateFileList();
             updateGenerateButton();
         }
 
-        function updateGenerateButton() {
-            generateBtn.disabled = selectedFiles.length === 0;
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
         function handleOutputTypeChange(e) {
@@ -602,7 +696,7 @@
             successModal.classList.remove('hidden');
         }
 
-        // Modal buttons
+        // Modal button handlers
         document.getElementById('downloadBtn').addEventListener('click', function() {
             if (currentSessionId) {
                 window.location.href = `/api/download/${currentSessionId}`;
@@ -618,12 +712,540 @@
             currentSessionId = null;
         });
 
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            async function handleSubmit(e) {
+                e.preventDefault();
+                
+                if (selectedFiles.length === 0) return;
+
+                // Show progress modal
+                progressModal.classList.remove('hidden');
+                progressBar.style.width = '0%';
+                progressText.textContent = 'Processing your OpenAPI specifications...';
+
+                // Simulate progress
+                const progressSteps = [
+                    { progress: 20, text: 'Validating specifications...' },
+                    { progress: 40, text: 'Generating mappings...' },
+                    { progress: 60, text: 'Creating response files...' },
+                    { progress: 80, text: 'Packaging files...' },
+                    { progress: 100, text: 'Complete!' }
+                ];
+
+                for (let i = 0; i < progressSteps.length; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    progressBar.style.width = progressSteps[i].progress + '%';
+                    progressText.textContent = progressSteps[i].text;
+                }
+
+                try {
+                    const formData = new FormData();
+                    
+                    // Add session ID
+                    formData.append('session_id', currentSessionId);
+                    
+                    selectedFiles.forEach(file => {
+                        formData.append('files', file);
+                    });
+                    
+                    const outputType = document.querySelector('input[name="outputType"]:checked').value;
+                    formData.append('generateJava', outputType === 'json-java');
+                    formData.append('javaPackage', document.getElementById('javaPackage').value);
+
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        // Update session ID from upload response
+                        currentSessionId = result.session_id;
+                        
+                        // Update progress
+                        progressText.textContent = 'Generating WireMock mappings...';
+                        progressBar.style.width = '70%';
+                        
+                        // Now generate the mappings
+                        const outputType = document.querySelector('input[name="outputType"]:checked').value;
+                        const generateResponse = await fetch('/api/generate', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                session_id: currentSessionId,
+                                include_java: outputType === 'json-java'
+                            })
+                        });
+                        
+                        const generateResult = await generateResponse.json();
+                        
+                        if (generateResponse.ok) {
+                            // Update final progress
+                            progressBar.style.width = '100%';
+                            progressText.textContent = 'Generation complete!';
+                            
+                            // Show success modal with results
+                            setTimeout(() => {
+                                showSuccessModal({
+                                    uploadedFiles: result.files,
+                                    generatedMappings: generateResult.results.reduce((total, r) => total + (r.mappings_generated || 0), 0),
+                                    responseFiles: generateResult.results.length * 6, // Approximate
+                                    includeJava: generateResult.include_java,
+                                    javaFiles: generateResult.include_java ? generateResult.results.length * 4 : 0, // Approximate
+                                    zipSize: 1024 * 50 // Placeholder
+                                });
+                            }, 500);
+                        } else {
+                            throw new Error(generateResult.error || 'Generation failed');
+                        }
+                    } else {
+                        throw new Error(result.error || 'Upload failed');
+                    }
+                } catch (error) {
+                    progressModal.classList.add('hidden');
+                    alert('Error: ' + error.message);
+                }
+            }
+
+            function showSuccessModal(summary) {
+                progressModal.classList.add('hidden');
+                
+                const summaryContent = document.getElementById('summaryContent');
+                summaryContent.innerHTML = `
+                    <div class="text-left space-y-1">
+                        <div><strong>Uploaded files:</strong> ${summary.uploadedFiles.length}</div>
+                        <div><strong>Generated mappings:</strong> ${summary.generatedMappings}</div>
+                        <div><strong>Response files:</strong> ${summary.responseFiles}</div>
+                        ${summary.includeJava ? `<div><strong>Java files:</strong> ${summary.javaFiles}</div>` : ''}
+                        <div><strong>Package size:</strong> ${formatFileSize(summary.zipSize)}</div>
+                    </div>
+                `;
+                
+                successModal.classList.remove('hidden');
+                
+                // Try to notify about WireMock integration
+                if (currentSessionId) {
+                    uploadMappingsToServer(currentSessionId);
+                }
+            }
+        });
+
+        // WireMock Server Integration Functions
+        const WIREMOCK_BASE_URL = 'http://localhost:8080';
+        const WIREMOCK_ADMIN_URL = `${WIREMOCK_BASE_URL}/__admin`;
+
+        // Check server status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkServerStatus();
+            updateServerStats();
+            // Check status every 30 seconds
+            setInterval(() => {
+                checkServerStatus();
+                updateServerStats();
+            }, 30000);
+        });
+
+        async function updateServerStats() {
+            try {
+                const [statusResponse, mappingsResponse, requestsResponse] = await Promise.all([
+                    fetch('/api/wiremock/status'),
+                    fetch('/api/wiremock/mappings/count'),
+                    fetch('/api/wiremock/requests/count')
+                ]);
+                
+                const status = await statusResponse.json();
+                const mappings = await mappingsResponse.json();
+                const requests = await requestsResponse.json();
+                
+                const statsContainer = document.getElementById('serverStats');
+                if (status.status === 'running') {
+                    statsContainer.innerHTML = `
+                        <div class="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <div class="text-2xl font-bold text-blue-600">${mappings.count || 0}</div>
+                            <div class="text-sm text-blue-700">Active Mappings</div>
+                        </div>
+                        <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                            <div class="text-2xl font-bold text-green-600">${requests.count || 0}</div>
+                            <div class="text-sm text-green-700">Total Requests</div>
+                        </div>
+                        <div class="text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
+                            <div class="text-2xl font-bold text-purple-600">🟢</div>
+                            <div class="text-sm text-purple-700">Server Online</div>
+                        </div>
+                    `;
+                } else {
+                    statsContainer.innerHTML = `
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl font-bold text-gray-400">-</div>
+                            <div class="text-sm text-gray-600">Active Mappings</div>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl font-bold text-gray-400">-</div>
+                            <div class="text-sm text-gray-600">Total Requests</div>
+                        </div>
+                        <div class="text-center p-4 bg-red-50 rounded-lg border border-red-200">
+                            <div class="text-2xl font-bold text-red-600">🔴</div>
+                            <div class="text-sm text-red-700">Server Offline</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Failed to update server stats:', error);
+            }
+        }
+
+        async function checkServerStatus() {
+            const statusElement = document.getElementById('serverStatus');
+            try {
+                const response = await fetch('/api/wiremock/status');
+                const data = await response.json();
+                
+                if (data.status === 'running') {
+                    statusElement.className = 'ml-3 px-2 py-1 text-xs rounded-full bg-green-100 text-green-800';
+                    statusElement.textContent = 'Online';
+                } else {
+                    statusElement.className = 'ml-3 px-2 py-1 text-xs rounded-full bg-red-100 text-red-800';
+                    statusElement.textContent = 'Offline';
+                }
+            } catch (error) {
+                statusElement.className = 'ml-3 px-2 py-1 text-xs rounded-full bg-red-100 text-red-800';
+                statusElement.textContent = 'Offline';
+            }
+        }
+
+        function openWireMockAdmin() {
+            window.open(`${WIREMOCK_ADMIN_URL}`, '_blank');
+        }
+
+        async function checkServerHealth() {
+            try {
+                const [statusResponse, mappingsResponse, requestsResponse] = await Promise.all([
+                    fetch('/api/wiremock/status'),
+                    fetch('/api/wiremock/mappings/count'),
+                    fetch('/api/wiremock/requests/count')
+                ]);
+                
+                const status = await statusResponse.json();
+                const mappings = await mappingsResponse.json();
+                const requests = await requestsResponse.json();
+                
+                if (status.status === 'running') {
+                    const healthInfo = `
+                        <div class="p-4">
+                            <h4 class="font-semibold text-green-700 mb-2">✅ WireMock Server Health</h4>
+                            <ul class="text-sm space-y-1">
+                                <li><strong>Status:</strong> Running</li>
+                                <li><strong>URL:</strong> ${status.url}</li>
+                                <li><strong>Active Mappings:</strong> ${mappings.count || 0}</li>
+                                <li><strong>Received Requests:</strong> ${requests.count || 0}</li>
+                            </ul>
+                        </div>
+                    `;
+                    showNotification(healthInfo, 'success');
+                } else {
+                    showNotification('❌ WireMock server is not running', 'error');
+                }
+                
+                // Open admin interface
+                window.open(`${WIREMOCK_ADMIN_URL}`, '_blank');
+            } catch (error) {
+                showNotification('❌ Cannot connect to WireMock server. Is it running?', 'error');
+            }
+        }
+
+        function viewRequestLogs() {
+            window.open(`${WIREMOCK_ADMIN_URL}/requests`, '_blank');
+        }
+
+        function manageMappings() {
+            window.open(`${WIREMOCK_ADMIN_URL}/mappings`, '_blank');
+        }
+
+        async function resetMappings() {
+            if (!confirm('Are you sure you want to reset ALL mappings? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${WIREMOCK_ADMIN_URL}/mappings/reset`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    showNotification('✅ All mappings have been reset', 'success');
+                } else {
+                    throw new Error('Failed to reset mappings');
+                }
+            } catch (error) {
+                showNotification('❌ Failed to reset mappings. Check server connection.', 'error');
+            }
+        }
+
+        async function reloadMappings() {
+            try {
+                const response = await fetch(`${WIREMOCK_ADMIN_URL}/mappings/reset`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    showNotification('🔄 Mappings reloaded successfully', 'success');
+                } else {
+                    throw new Error('Failed to reload mappings');
+                }
+            } catch (error) {
+                showNotification('❌ Failed to reload mappings. Check server connection.', 'error');
+            }
+        }
+
+        function viewScenarios() {
+            window.open(`${WIREMOCK_ADMIN_URL}/scenarios`, '_blank');
+        }
+
+        function testLiveAPIs() {
+            // Create a simple API testing interface
+            const testHtml = `
+                <div style="padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+                    <h2>🧪 API Testing Tool</h2>
+                    <p>Test your WireMock endpoints directly:</p>
+                    <div style="margin: 20px 0;">
+                        <label><strong>Method:</strong></label>
+                        <select id="method" style="margin-left: 10px; padding: 5px;">
+                            <option>GET</option>
+                            <option>POST</option>
+                            <option>PUT</option>
+                            <option>DELETE</option>
+                        </select>
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <label><strong>URL:</strong></label><br>
+                        <input type="text" id="url" value="http://localhost:8080/api/products" 
+                               style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+                    <button onclick="testEndpoint()" 
+                            style="background: #FF6B35; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                        🚀 Test Endpoint
+                    </button>
+                    <div id="result" style="margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 4px; display: none;">
+                        <strong>Response:</strong>
+                        <pre id="response" style="margin-top: 10px; white-space: pre-wrap; font-size: 12px;"></pre>
+                    </div>
+                </div>
+                <script>
+                    async function testEndpoint() {
+                        const method = document.getElementById('method').value;
+                        const url = document.getElementById('url').value;
+                        const resultDiv = document.getElementById('result');
+                        const responseDiv = document.getElementById('response');
+                        
+                        try {
+                            const response = await fetch(url, { method });
+                            const text = await response.text();
+                            let formattedText = text;
+                            
+                            try {
+                                const json = JSON.parse(text);
+                                formattedText = JSON.stringify(json, null, 2);
+                            } catch (e) {
+                                // Not JSON, use as-is
+                            }
+                            
+                            responseDiv.textContent = 'Status: ' + response.status + '\\n\\n' + formattedText;
+                            resultDiv.style.display = 'block';
+                        } catch (error) {
+                            responseDiv.textContent = 'Error: ' + error.message;
+                            resultDiv.style.display = 'block';
+                        }
+                    }
+                </script>
+            `;
+            
+            const newWindow = window.open('', '_blank', 'width=600,height=500');
+            newWindow.document.write(testHtml);
+            newWindow.document.title = 'API Testing Tool';
+        }
+
+        async function testLiveAPIs() {
+            try {
+                const response = await fetch('/api/wiremock/status');
+                const status = await response.json();
+                
+                if (status.status !== 'running') {
+                    showNotification('❌ WireMock server must be running to test APIs', 'error');
+                    return;
+                }
+
+                // Open a simple API test page
+                const testWindow = window.open('', '_blank');
+                testWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>WireMock API Tester</title>
+                        <script src="https://cdn.tailwindcss.com"></script>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                    </head>
+                    <body class="bg-gray-100 p-8">
+                        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+                            <h1 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                                <i class="fas fa-play-circle text-blue-600 mr-3"></i>
+                                WireMock API Tester
+                            </h1>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-4">Quick Tests</h3>
+                                    <div class="space-y-3">
+                                        <button onclick="testEndpoint('GET', '/api/health')" 
+                                                class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                                            <i class="fas fa-heartbeat mr-2"></i>Test Health Endpoint
+                                        </button>
+                                        <button onclick="testEndpoint('GET', '/products')" 
+                                                class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                            <i class="fas fa-list mr-2"></i>Test Get Products
+                                        </button>
+                                        <button onclick="testEndpoint('GET', '/users')" 
+                                                class="w-full px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
+                                            <i class="fas fa-users mr-2"></i>Test Get Users
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="mt-6">
+                                        <h4 class="text-md font-semibold mb-2">Custom Test</h4>
+                                        <input type="text" id="customUrl" placeholder="/api/custom" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded mb-2">
+                                        <select id="customMethod" class="w-full px-3 py-2 border border-gray-300 rounded mb-2">
+                                            <option value="GET">GET</option>
+                                            <option value="POST">POST</option>
+                                            <option value="PUT">PUT</option>
+                                            <option value="DELETE">DELETE</option>
+                                        </select>
+                                        <button onclick="testCustomEndpoint()" 
+                                                class="w-full px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                                            Test Custom Endpoint
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-4">Results</h3>
+                                    <div id="testResults" class="bg-gray-50 p-4 rounded-lg h-96 overflow-y-auto font-mono text-sm">
+                                        <p class="text-gray-500">Test results will appear here...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            const WIREMOCK_URL = '${WIREMOCK_BASE_URL}';
+                            
+                            function testEndpoint(method, path) {
+                                const url = WIREMOCK_URL + path;
+                                fetch(url, { method: method })
+                                    .then(response => {
+                                        return response.text().then(text => {
+                                            displayResult(method, path, response.status, text);
+                                        });
+                                    })
+                                    .catch(error => {
+                                        displayResult(method, path, 'ERROR', error.message);
+                                    });
+                            }
+                            
+                            function testCustomEndpoint() {
+                                const url = document.getElementById('customUrl').value;
+                                const method = document.getElementById('customMethod').value;
+                                testEndpoint(method, url);
+                            }
+                            
+                            function displayResult(method, path, status, body) {
+                                const results = document.getElementById('testResults');
+                                const timestamp = new Date().toLocaleTimeString();
+                                const statusClass = status >= 200 && status < 300 ? 'text-green-600' : 
+                                                  status >= 400 ? 'text-red-600' : 'text-yellow-600';
+                                
+                                results.innerHTML += `
+                                    <div class="mb-4 p-3 bg-white rounded border">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <span class="font-bold">${method} ${path}</span>
+                                            <span class="${statusClass} font-bold">Status: ${status}</span>
+                                        </div>
+                                        <div class="text-gray-500 text-xs mb-2">${timestamp}</div>
+                                        <pre class="text-xs bg-gray-100 p-2 rounded overflow-x-auto">${body}</pre>
+                                    </div>
+                                `;
+                                results.scrollTop = results.scrollHeight;
+                            }
+                        </script>
+                    </body>
+                    </html>
+                `);
+                
+                showNotification('🚀 API testing window opened', 'success');
+            } catch (error) {
+                showNotification('❌ Failed to open API tester', 'error');
+            }
+        }
+
+        // Auto-upload mappings to WireMock server
+        async function uploadMappingsToServer(sessionId) {
+            try {
+                const response = await fetch('/api/wiremock/status');
+                const status = await response.json();
+                
+                if (status.status !== 'running') {
+                    showNotification('⚠️ WireMock server is not running. Mappings generated but not uploaded.', 'warning');
+                    return false;
+                }
+
+                // Here you would implement the actual upload logic
+                // For now, just show a success message
+                showNotification(`
+                    <div>
+                        <h4 class="font-semibold mb-2">🚀 Mappings Ready</h4>
+                        <p class="text-sm">Generated mappings are available for download.</p>
+                        <p class="text-sm mt-1">You can manually copy them to WireMock's mappings folder or use the admin interface.</p>
+                    </div>
+                `, 'success');
+                
+                // Refresh server stats to show new mappings
+                updateServerStats();
+                
+                return true;
+            } catch (error) {
+                console.error('Failed to upload mappings:', error);
+                return false;
+            }
+        }
+
+        // Utility function to show notifications
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 max-w-md ${
+                type === 'success' ? 'bg-green-100 border border-green-400 text-green-700' :
+                type === 'error' ? 'bg-red-100 border border-red-400 text-red-700' :
+                'bg-blue-100 border border-blue-400 text-blue-700'
+            }`;
+            
+            notification.innerHTML = `
+                <div class="flex">
+                    <div class="flex-1">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-gray-400 hover:text-gray-600 flex-shrink-0">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 7 seconds for detailed messages
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 7000);
         }
     </script>
 </body>

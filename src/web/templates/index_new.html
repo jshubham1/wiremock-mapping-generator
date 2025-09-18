@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WireMock Mapping Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'wiremock': '#FF6B35',
+                        'openapi': '#85EA2D',
+                        'java': '#f89820',
+                        'python': '#3776ab'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .drag-over {
+            border-color: #FF6B35 !important;
+            background-color: rgba(255, 107, 53, 0.1) !important;
+        }
+        
+        .tab-button.active {
+            border-color: #FF6B35 !important;
+            color: #FF6B35 !important;
+        }
+        
+        .tab-content {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .mapping-card {
+            transition: all 0.2s ease;
+        }
+        
+        .mapping-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex items-center space-x-4">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-cogs text-4xl text-wiremock"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">WireMock Mapping Generator</h1>
+                        <p class="text-sm text-gray-500">Generate comprehensive mock mappings from OpenAPI specifications</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fab fa-docker text-2xl text-blue-600"></i>
+                    <i class="fas fa-code text-2xl text-java"></i>
+                    <i class="fab fa-python text-2xl text-python"></i>
+                    <i class="fas fa-file-code text-2xl text-openapi"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">
+                Transform Your OpenAPI Specs into WireMock Magic
+            </h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                Drop your OpenAPI specifications and instantly generate comprehensive WireMock mappings 
+                with realistic responses, error scenarios, and optional Java integration code.
+            </p>
+        </div>
+
+        <!-- Upload Form -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="px-8 py-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <i class="fas fa-upload text-wiremock mr-2"></i>
+                    Upload OpenAPI Specifications
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">
+                    Upload your YAML or JSON OpenAPI specification files
+                </p>
+            </div>
+
+            <form id="uploadForm" enctype="multipart/form-data" class="p-8">
+                <!-- Drag and Drop Area -->
+                <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center transition-all duration-200 hover:border-wiremock hover:bg-orange-50 cursor-pointer">
+                    <div class="space-y-4">
+                        <div class="flex justify-center">
+                            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-xl font-medium text-gray-900">Drop your OpenAPI files here</p>
+                            <p class="text-gray-500">or <span class="text-wiremock font-medium">click to browse</span></p>
+                        </div>
+                        <div class="flex justify-center space-x-4 text-sm text-gray-500">
+                            <span class="flex items-center">
+                                <i class="fas fa-file-code text-openapi mr-1"></i>
+                                YAML
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-file-code text-blue-600 mr-1"></i>
+                                JSON
+                            </span>
+                            <span class="text-gray-400">Max 16MB per file</span>
+                        </div>
+                    </div>
+                    <input type="file" id="fileInput" name="files" multiple accept=".yaml,.yml,.json" style="position: absolute; left: -9999px; opacity: 0; width: 1px; height: 1px;">
+                </div>
+
+                <!-- File List -->
+                <div id="fileList" class="mt-6 hidden">
+                    <h4 class="font-medium text-gray-900 mb-3">Selected Files:</h4>
+                    <div id="fileItems" class="space-y-2"></div>
+                </div>
+
+                <!-- Generation Options -->
+                <div class="mt-8 space-y-6">
+                    <h4 class="font-medium text-gray-900 flex items-center">
+                        <i class="fas fa-cog text-gray-600 mr-2"></i>
+                        Generation Options
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Output Type -->
+                        <div class="space-y-3">
+                            <label class="text-sm font-medium text-gray-700">Output Type</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <input type="radio" name="outputType" value="json-only" checked class="text-wiremock focus:ring-wiremock">
+                                    <div class="ml-3">
+                                        <div class="font-medium text-gray-900">JSON Mappings Only</div>
+                                        <div class="text-sm text-gray-500">WireMock JSON files for immediate use</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <input type="radio" name="outputType" value="json-java" class="text-wiremock focus:ring-wiremock">
+                                    <div class="ml-3">
+                                        <div class="font-medium text-gray-900">JSON + Java Code</div>
+                                        <div class="text-sm text-gray-500">Include Spring Boot & JUnit integration classes</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Java Package (shown when Java is selected) -->
+                        <div id="javaOptions" class="space-y-3 hidden">
+                            <label for="javaPackage" class="text-sm font-medium text-gray-700">Java Package Name</label>
+                            <div class="relative">
+                                <input 
+                                    type="text" 
+                                    id="javaPackage" 
+                                    name="javaPackage" 
+                                    value="com.example.wiremock"
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-wiremock focus:border-wiremock"
+                                    placeholder="com.example.wiremock"
+                                >
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    <i class="fab fa-java text-java"></i>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500">Package name for generated Java classes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="mt-8 flex justify-center">
+                    <button 
+                        type="submit" 
+                        id="generateBtn"
+                        disabled
+                        class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-wiremock hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wiremock disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                    >
+                        <i class="fas fa-magic mr-2"></i>
+                        Generate WireMock Mappings
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Progress Modal -->
+        <div id="progressModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3 text-center">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-orange-100 mb-4">
+                        <i class="fas fa-cogs text-wiremock text-xl animate-spin"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900">Generating Mappings</h3>
+                    <div class="mt-2 px-7 py-3">
+                        <p class="text-sm text-gray-500" id="progressText">Processing your OpenAPI specifications...</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+                            <div class="bg-wiremock h-2.5 rounded-full transition-all duration-300" id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+                <!-- Enhanced Success Modal -->
+        <div id="successModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+            <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <div class="flex items-center justify-center w-12 h-12 mx-auto bg-green-100 rounded-full mb-4">
+                        <i class="fas fa-check text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-medium text-gray-900 text-center mb-6">WireMock Mappings Generated Successfully!</h3>
+                    
+                    <!-- Summary Stats -->
+                    <div id="summaryContent" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
+                    
+                    <!-- Tabs for different views -->
+                    <div class="border-b border-gray-200 mb-6">
+                        <nav class="-mb-px flex space-x-8">
+                            <button onclick="showTab('overview')" id="tab-overview" class="tab-button active py-2 px-1 border-b-2 border-wiremock font-medium text-sm text-wiremock">
+                                Overview
+                            </button>
+                            <button onclick="showTab('mappings')" id="tab-mappings" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                Mappings
+                            </button>
+                            <button onclick="showTab('admin')" id="tab-admin" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                Admin URLs
+                            </button>
+                            <button onclick="showTab('testing')" id="tab-testing" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                Live Testing
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <!-- Tab Content -->
+                    <div id="modal-content" class="min-h-96">
+                        <!-- Overview Tab -->
+                        <div id="overview-content" class="tab-content">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-900 mb-3">Generation Summary</h4>
+                                    <div id="generation-summary" class="space-y-2 text-sm">
+                                        <!-- Will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-900 mb-3">Quick Actions</h4>
+                                    <div class="space-y-3">
+                                        <button 
+                                            id="downloadBtn"
+                                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                                        >
+                                            <i class="fas fa-download mr-2"></i>
+                                            Download ZIP Package
+                                        </button>
+                                        <button 
+                                            onclick="startWireMockInstance()"
+                                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                                        >
+                                            <i class="fas fa-play mr-2"></i>
+                                            Start WireMock Instance
+                                        </button>
+                                        <button 
+                                            id="newGenerationBtn"
+                                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                                        >
+                                            <i class="fas fa-plus mr-2"></i>
+                                            Generate Another
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Mappings Tab -->
+                        <div id="mappings-content" class="tab-content hidden">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-semibold text-gray-900">Generated Mappings</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="text" id="mapping-search" placeholder="Search mappings..." class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                        <select id="method-filter" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                            <option value="">All Methods</option>
+                                            <option value="GET">GET</option>
+                                            <option value="POST">POST</option>
+                                            <option value="PUT">PUT</option>
+                                            <option value="DELETE">DELETE</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="mappings-list" class="space-y-2 max-h-96 overflow-y-auto">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Admin URLs Tab -->
+                        <div id="admin-content" class="tab-content hidden">
+                            <div class="space-y-4">
+                                <h4 class="font-semibold text-gray-900">WireMock Admin Endpoints</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-gray-900 mb-3">Management</h5>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex justify-between items-center">
+                                                <span>All Mappings:</span>
+                                                <code class="bg-white px-2 py-1 rounded">GET /__admin/mappings</code>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span>Reset Mappings:</span>
+                                                <code class="bg-white px-2 py-1 rounded">POST /__admin/mappings/reset</code>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span>Health Check:</span>
+                                                <code class="bg-white px-2 py-1 rounded">GET /__admin/health</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-gray-900 mb-3">Monitoring</h5>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex justify-between items-center">
+                                                <span>Requests:</span>
+                                                <code class="bg-white px-2 py-1 rounded">GET /__admin/requests</code>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span>Scenarios:</span>
+                                                <code class="bg-white px-2 py-1 rounded">GET /__admin/scenarios</code>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span>Settings:</span>
+                                                <code class="bg-white px-2 py-1 rounded">GET /__admin/settings</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                                    <h5 class="font-medium text-blue-900 mb-2">Quick Test</h5>
+                                    <p class="text-sm text-blue-700 mb-3">WireMock is running on port 8080. Test the connection:</p>
+                                    <div class="flex items-center space-x-3">
+                                        <input type="text" id="wiremock-url" value="http://localhost:8080" class="flex-1 px-3 py-2 border border-blue-300 rounded-md text-sm">
+                                        <button onclick="testWireMockHealth()" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
+                                            Test Connection
+                                        </button>
+                                        <a href="http://localhost:8080/__admin" target="_blank" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700">
+                                            Open Admin
+                                        </a>
+                                    </div>
+                                    <div id="health-status" class="mt-2 text-sm"></div>
+                                    <div class="mt-3 text-xs text-blue-600">
+                                        <p>🎉 WireMock server is running and ready to use!</p>
+                                        <p>Admin UI: <a href="http://localhost:8080/__admin" target="_blank" class="underline">http://localhost:8080/__admin</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Live Testing Tab -->
+                        <div id="testing-content" class="tab-content hidden">
+                            <div class="space-y-4">
+                                <h4 class="font-semibold text-gray-900">Live API Testing</h4>
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <div class="bg-gray-50 p-4 rounded-lg">
+                                            <h5 class="font-medium text-gray-900 mb-3">Test Configuration</h5>
+                                            <div class="space-y-3">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1">WireMock Base URL</label>
+                                                    <input type="text" id="test-base-url" value="http://localhost:8080" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1">Select Endpoint</label>
+                                                    <select id="test-endpoint" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                                        <!-- Will be populated by JavaScript -->
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1">Test Scenario</label>
+                                                    <select id="test-scenario" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                                        <option value="happy_path">Success (200/201)</option>
+                                                        <option value="unauthorized_access">Unauthorized (401)</option>
+                                                        <option value="forbidden_access">Forbidden (403)</option>
+                                                        <option value="not_found_error">Not Found (404)</option>
+                                                        <option value="server_error">Server Error (500)</option>
+                                                        <option value="bad_gateway">Bad Gateway (502)</option>
+                                                        <option value="service_unavailable">Service Unavailable (503)</option>
+                                                    </select>
+                                                </div>
+                                                <button onclick="executeTest()" class="w-full px-4 py-2 bg-wiremock text-white rounded-md text-sm hover:bg-orange-600">
+                                                    <i class="fas fa-play mr-2"></i>
+                                                    Execute Test
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div class="bg-gray-50 p-4 rounded-lg">
+                                            <h5 class="font-medium text-gray-900 mb-3">Test Results</h5>
+                                            <div id="test-results" class="space-y-2 text-sm max-h-64 overflow-y-auto">
+                                                <p class="text-gray-500 italic">Execute a test to see results here...</p>
+                                            </div>
+                                        </div>
+                                        <div class="bg-gray-50 p-4 rounded-lg">
+                                            <h5 class="font-medium text-gray-900 mb-3">Example Payloads</h5>
+                                            <div id="example-payloads" class="space-y-2 text-sm">
+                                                <p class="text-gray-500 italic">Select an endpoint to see example payloads...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Close Button -->
+                    <div class="mt-6 flex justify-center">
+                        <button onclick="closeResultsModal()" class="px-6 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <div class="text-center">
+                    <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-orange-100 mb-4">
+                        <i class="fas fa-file-code text-wiremock text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Multi-Spec Support</h3>
+                    <p class="text-gray-600 text-sm">
+                        Process multiple OpenAPI specifications simultaneously with organized output structure.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <div class="text-center">
+                    <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100 mb-4">
+                        <i class="fas fa-shield-alt text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Error Scenarios</h3>
+                    <p class="text-gray-600 text-sm">
+                        Comprehensive coverage with 8 HTTP status codes per endpoint for thorough testing.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <div class="text-center">
+                    <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-yellow-100 mb-4">
+                        <i class="fab fa-java text-java text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Java Integration</h3>
+                    <p class="text-gray-600 text-sm">
+                        Optional Spring Boot configuration classes and JUnit test bases for seamless integration.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center text-gray-500 text-sm">
+                <p>&copy; 2024 WireMock Mapping Generator. Built with ❤️ for API developers.</p>
+                <div class="mt-2 flex justify-center space-x-4">
+                    <span class="flex items-center">
+                        <i class="fas fa-code mr-1"></i>
+                        OpenAPI 3.0+
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-server mr-1"></i>
+                        WireMock 3.3.1
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fab fa-docker mr-1"></i>
+                        Docker Ready
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Make session ID available to JavaScript
+        window.SESSION_ID = '{{ session_id }}';
+        console.log('🔑 Session ID:', window.SESSION_ID);
+    </script>
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+</body>
+</html>

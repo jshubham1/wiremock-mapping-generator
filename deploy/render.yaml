@@ -1,0 +1,17 @@
+# Render Deployment Configuration
+# Deploy to: https://render.com
+
+services:
+  - type: web
+    name: wiremock-generator-web
+    env: docker
+    dockerfilePath: ./deploy/docker/Dockerfile.web
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 5001
+      - key: FLASK_ENV
+        value: production
+    buildCommand: ""
+    startCommand: ""
