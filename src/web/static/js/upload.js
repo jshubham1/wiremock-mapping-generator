@@ -1,5 +1,3 @@
-console.log('🚀 Upload.js loaded');
-
 // Global variables
 let selectedFiles = [];
 let currentSessionId = window.SESSION_ID || ''; // Get session ID from template
@@ -11,9 +9,6 @@ let outputTypeRadios, javaOptions;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM loaded, initializing upload functionality');
-    console.log('🔑 Current session ID:', currentSessionId);
-    
     // Get DOM elements
     dropZone = document.getElementById('dropZone');
     fileInput = document.getElementById('fileInput');
@@ -30,12 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     outputTypeRadios = document.querySelectorAll('input[name="outputType"]');
     javaOptions = document.getElementById('javaOptions');
     
-    console.log('Elements found:', {
-        dropZone: !!dropZone,
-        fileInput: !!fileInput,
-        generateBtn: !!generateBtn
-    });
-    
     if (!dropZone || !fileInput) {
         console.error('❌ Required elements not found!');
         return;
@@ -43,12 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize event listeners
     initializeEventListeners();
-    
-    console.log('✅ Upload functionality initialized');
 });
 
 function initializeEventListeners() {
-    console.log('📋 Setting up event listeners');
+    // Setup event listeners for upload functionality
     
     // Prevent default drag behaviors on the entire page
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -83,7 +70,6 @@ function initializeEventListeners() {
         document.getElementById('newGenerationBtn').addEventListener('click', handleNewGeneration);
     }
     
-    console.log('✅ Event listeners set up');
 }
 
 function preventDefaults(e) {
@@ -92,34 +78,28 @@ function preventDefaults(e) {
 }
 
 function handleDropZoneClick(e) {
-    console.log('🖱️ Drop zone clicked');
     
     // For Chrome compatibility, we need to trigger the file input
     // immediately and synchronously without any complex operations
     if (fileInput) {
-        console.log('📁 Triggering file input for Chrome');
         // Don't prevent default or stop propagation for file input clicks
         fileInput.click();
-        console.log('✅ File input click triggered');
     } else {
         console.error('❌ File input not found');
     }
 }
 
 function handleDragEnter(e) {
-    console.log('📥 Drag enter');
     preventDefaults(e);
     dropZone.classList.add('drag-over');
 }
 
 function handleDragOver(e) {
-    console.log('📥 Drag over');
     preventDefaults(e);
     dropZone.classList.add('drag-over');
 }
 
 function handleDragLeave(e) {
-    console.log('📤 Drag leave');
     preventDefaults(e);
     
     // Only remove drag-over if we're actually leaving the dropZone
@@ -133,26 +113,21 @@ function handleDragLeave(e) {
 }
 
 function handleDrop(e) {
-    console.log('📂 Drop detected');
     preventDefaults(e);
     dropZone.classList.remove('drag-over');
     
     const files = Array.from(e.dataTransfer.files);
-    console.log('Files dropped:', files.length);
     
     processFiles(files);
 }
 
 function handleFileSelect(e) {
-    console.log('📂 File selection');
     const files = Array.from(e.target.files);
-    console.log('Files selected:', files.length);
     
     processFiles(files);
 }
 
 function processFiles(files) {
-    console.log('🔍 Processing files:', files.length);
     
     const validFiles = files.filter(file => {
         const extension = file.name.toLowerCase().split('.').pop();
@@ -165,7 +140,6 @@ function processFiles(files) {
         return isValid;
     });
     
-    console.log('✅ Valid files:', validFiles.length);
     
     selectedFiles = validFiles;
     updateFileList();
@@ -173,7 +147,6 @@ function processFiles(files) {
 }
 
 function updateFileList() {
-    console.log('📋 Updating file list');
     
     if (selectedFiles.length === 0) {
         fileList.classList.add('hidden');
@@ -210,11 +183,9 @@ function updateGenerateButton() {
     const hasFiles = selectedFiles.length > 0;
     generateBtn.disabled = !hasFiles;
     
-    console.log('🔘 Generate button:', hasFiles ? 'enabled' : 'disabled');
 }
 
 function removeFile(index) {
-    console.log('🗑️ Removing file:', index);
     selectedFiles.splice(index, 1);
     updateFileList();
     updateGenerateButton();
@@ -237,12 +208,10 @@ function handleOutputTypeChange(e) {
         javaOptions.classList.add('hidden');
     }
     
-    console.log('⚙️ Output type changed:', e.target.value);
 }
 
 async function handleFormSubmit(e) {
     e.preventDefault();
-    console.log('📤 Form submitted');
     
     if (selectedFiles.length === 0) {
         console.warn('❌ No files selected');
@@ -259,7 +228,6 @@ async function handleFormSubmit(e) {
 }
 
 async function uploadAndGenerate() {
-    console.log('🚀 Starting upload and generation');
     
     // Show progress modal
     showProgressModal();
@@ -279,7 +247,6 @@ async function uploadAndGenerate() {
     
     // Upload files
     updateProgress(25, 'Uploading files...');
-    console.log('📤 Uploading files with session ID:', currentSessionId);
     
     const uploadResponse = await fetch('/api/upload', {
         method: 'POST',
@@ -292,13 +259,11 @@ async function uploadAndGenerate() {
     }
     
     const uploadResult = await uploadResponse.json();
-    console.log('✅ Upload successful:', uploadResult);
     // Session ID should remain the same
     currentSessionId = uploadResult.session_id;
     
     // Generate mappings
     updateProgress(50, 'Generating mappings...');
-    console.log('🔧 Generating mappings for session:', currentSessionId);
     
     const generateResponse = await fetch('/api/generate', {
         method: 'POST',
@@ -317,14 +282,12 @@ async function uploadAndGenerate() {
     }
     
     const generateResult = await generateResponse.json();
-    console.log('✅ Generation successful:', generateResult);
     
     // Upload mappings to WireMock server
     updateProgress(75, 'Uploading mappings to WireMock...');
     
     try {
         await uploadMappingsToWireMock(currentSessionId);
-        console.log('✅ Mappings uploaded to WireMock server');
         updateProgress(100, 'Complete!');
     } catch (error) {
         console.warn('⚠️ Failed to upload mappings to WireMock:', error);
@@ -355,7 +318,6 @@ function hideProgressModal() {
 function updateProgress(percent, text) {
     progressBar.style.width = percent + '%';
     progressText.textContent = text;
-    console.log(`📊 Progress: ${percent}% - ${text}`);
 }
 
 function showSuccessModal(summary) {
@@ -411,13 +373,11 @@ function showSuccessModal(summary) {
     populateTestEndpoints(summary);
     
     successModal.classList.remove('hidden');
-    console.log('✅ Enhanced success modal shown');
 }
 
 function handleDownload() {
     if (currentSessionId) {
         window.location.href = `/api/download/${currentSessionId}`;
-        console.log('📥 Download initiated');
     }
 }
 
@@ -428,7 +388,6 @@ function handleNewGeneration() {
     updateGenerateButton();
     fileInput.value = '';
     currentSessionId = '';
-    console.log('🔄 Reset for new generation');
 }
 
 // Export functions for global access
@@ -445,7 +404,6 @@ async function uploadMappingsToWireMock(sessionId) {
     const wiremockUrl = 'http://localhost:8080';
     
     try {
-        console.log(`🔄 Fetching mappings for session: ${sessionId}`);
         
         // First, get the generated mappings from our Flask backend
         const mappingsResponse = await fetch(`/api/mappings/${sessionId}`);
@@ -457,8 +415,6 @@ async function uploadMappingsToWireMock(sessionId) {
         }
         
         const mappingsData = await mappingsResponse.json();
-        console.log('📋 Retrieved mappings data:', mappingsData);
-        console.log(`📋 Found ${mappingsData.mappings?.length || 0} mappings to upload`);
         
         if (!mappingsData.mappings || mappingsData.mappings.length === 0) {
             console.warn('⚠️ No mappings found to upload - this might be why WireMock shows 0 mappings');
@@ -470,7 +426,6 @@ async function uploadMappingsToWireMock(sessionId) {
             
             for (const [index, mapping] of mappingsData.mappings.entries()) {
                 try {
-                    console.log(`📤 Uploading mapping ${index + 1}/${mappingsData.mappings.length}: ${mapping.request?.method || 'UNKNOWN'} ${mapping.request?.url || mapping.request?.urlPattern || 'UNKNOWN'}`);
                     
                     const uploadResponse = await fetch(`${wiremockUrl}/__admin/mappings`, {
                         method: 'POST',
@@ -494,7 +449,6 @@ async function uploadMappingsToWireMock(sessionId) {
                     if (uploadResponse.ok) {
                         uploadedCount++;
                         const result = await uploadResponse.json();
-                        console.log(`✅ Uploaded mapping: ${mapping.request.method} ${mapping.request.url || mapping.request.urlPattern} (ID: ${result.id || 'unknown'})`);
                     } else {
                         failedCount++;
                         const errorText = await uploadResponse.text();
@@ -507,15 +461,12 @@ async function uploadMappingsToWireMock(sessionId) {
                 }
             }
             
-            console.log(`🎉 Upload summary: ${uploadedCount} successful, ${failedCount} failed out of ${mappingsData.mappings.length} total`);
         }
         
         // Also upload response files if they exist
         if (mappingsData.responseFiles && Object.keys(mappingsData.responseFiles).length > 0) {
-            console.log(`📁 Uploading ${Object.keys(mappingsData.responseFiles).length} response files...`);
             await uploadResponseFiles(wiremockUrl, mappingsData.responseFiles);
         } else {
-            console.log('📁 No response files to upload');
         }
         
         return mappingsData.mappings?.length || 0;
@@ -528,7 +479,6 @@ async function uploadMappingsToWireMock(sessionId) {
 
 // Helper function to upload response files
 async function uploadResponseFiles(wiremockUrl, responseFiles) {
-    console.log('📁 Uploading response files to WireMock...');
     
     for (const [fileName, content] of Object.entries(responseFiles)) {
         try {
@@ -541,7 +491,6 @@ async function uploadResponseFiles(wiremockUrl, responseFiles) {
             });
             
             if (uploadResponse.ok) {
-                console.log(`✅ Uploaded response file: ${fileName}`);
             } else {
                 console.warn(`⚠️ Failed to upload response file: ${fileName}`);
             }
@@ -637,7 +586,6 @@ async function populateMappingsList(summary) {
             const mappings = data.mappings || [];
             
             if (mappings.length > 0) {
-                console.log(`📋 Displaying ${mappings.length} real mappings from WireMock`);
                 displayRealMappings(mappings, mappingsList);
                 return;
             }
@@ -846,14 +794,12 @@ function generateMockMappings(summary) {
     const methods = ['GET', 'POST', 'PUT', 'DELETE'];
     const mappings = [];
     
-    console.log('📋 Generating mappings for uploaded files:', summary.uploadedFiles);
     
     // Generate mappings for each uploaded file
     summary.uploadedFiles.forEach((file, fileIndex) => {
         const apiName = file.name.replace(/\.(yaml|yml|json)$/, '');
         const cleanApiName = apiName.toLowerCase().replace(/[^a-z0-9]/g, '');
         
-        console.log(`🔧 Processing API: ${apiName}`);
         
         // Generate different endpoints for each API based on common patterns
         const endpoints = [
@@ -893,7 +839,6 @@ function generateMockMappings(summary) {
         });
     });
     
-    console.log(`✅ Generated ${mappings.length} total mappings for ${summary.uploadedFiles.length} APIs`);
     return mappings;
 }
 
@@ -978,7 +923,6 @@ async function populateTestEndpoints(summary) {
             const mappings = data.mappings || [];
             
             if (mappings.length > 0) {
-                console.log(`🔗 Populating test endpoints with ${mappings.length} real mappings`);
                 
                 // Group mappings by API for organized dropdown
                 const groupedMappings = groupMappingsBySpec(mappings);

@@ -11,7 +11,9 @@
             theme: {
                 extend: {
                     colors: {
-                        'wiremock': '#FF6B35',
+                        'wiremock': '    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+</body>
+</html>B35',
                         'openapi': '#85EA2D',
                         'java': '#f89820',
                         'python': '#3776ab'
@@ -507,6 +509,5 @@
         console.log('🔑 Session ID:', window.SESSION_ID);
     </script>
     <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
 </body>
 </html>
