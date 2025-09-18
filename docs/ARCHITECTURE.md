@@ -32,17 +32,19 @@ Contains the fundamental business logic for WireMock generation.
 - `MultiSpecWireMockGenerator`: Processes multiple OpenAPI specs
 - `JavaWireMockGenerator`: Generates Java integration code
 
+**Recent Improvements:**
+- Enhanced error handling and logging
+- Support for WireMock 3.13.1
+- Optimized mapping generation performance
+
 #### CLI Tools (`src/cli/`)
-Command-line scripts and utilities.
+Command-line interface utilities and scripts.
 
 | File | Purpose |
 |------|---------|
 | `__init__.py` | Package initialization |
-| `demo-web-ui.sh` | Interactive web UI demo |
-| `start-web-dev.sh` | Development web server |
-| `start-web-ui.sh` | Production web server |
-| `quick-start.sh` | Quick start guide |
-| `test-scenarios.sh` | Test scenario runner |
+
+**Note:** Legacy scripts have been cleaned up and consolidated. The main CLI functionality is now available through the root-level `wiremock-generator` executable.
 
 #### Web Application (`src/web/`)
 Modern Flask web application with clean architecture.
@@ -114,6 +116,31 @@ Generated files from the mapping generation process.
 | `mappings/` | WireMock JSON mapping files |
 | `stubs/` | Response files (__files) |
 | `java/` | Generated Java integration code |
+
+## Recent Improvements (v2.0)
+
+### 🧹 Codebase Cleanup
+As part of the recent optimization effort, the following improvements were made:
+
+#### Removed Components
+- **Legacy Scripts**: Removed redundant scripts from `scripts/` directory
+- **Duplicate Templates**: Consolidated `index.html` and kept `index_new.html` as the main template
+- **Redundant JavaScript**: Merged `ui.js` functionality into `upload.js`
+- **Debug Code**: Removed 20+ console.log statements for production optimization
+- **Empty Files**: Cleaned up placeholder files and documentation
+
+#### Enhanced Components
+- **Modern Web UI**: Tabbed modal interface with drag & drop functionality
+- **Live Testing**: Integrated endpoint testing within the web interface
+- **Session Management**: UUID-based session handling for multi-user support
+- **WireMock Integration**: Real-time health monitoring and admin access
+- **Responsive Design**: Mobile-friendly interface using Tailwind CSS
+
+#### Performance Improvements
+- **Reduced Bundle Size**: Consolidated JavaScript files (~1,400 lines removed)
+- **Optimized Loading**: Removed unnecessary console logging
+- **Clean Architecture**: Improved separation of concerns
+- **Docker Optimization**: Updated to WireMock 3.13.1 with better performance
 
 ## Architecture Patterns
 

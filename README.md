@@ -6,16 +6,18 @@ Transform your OpenAPI specs into ready-to-use WireMock mappings with both CLI a
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0+-green.svg)](https://swagger.io/specification/)
-[![WireMock](https://img.shields.io/badge/WireMock-3.3.1-blue.svg)](http://wiremock.org/)
+[![WireMock](https://img.shields.io/badge/WireMock-3.13.1-blue.svg)](http://wiremock.org/)
 
 ## ✨ Features
 
 - 🔄 **Multi-spec processing** - Generate mappings from multiple OpenAPI specs
 - 🎯 **Smart mapping generation** - Comprehensive HTTP status codes (200, 401, 403, 404, 500, 502, 503)
-- 🌐 **Modern web interface** - Drag-and-drop file upload with real-time processing
+- 🌐 **Modern web interface** - Drag-and-drop file upload with tabbed modals and live testing
 - ⚡ **CLI tool** - Perfect for automation and CI/CD pipelines
-- 🐳 **Docker ready** - Full Docker Compose setup with WireMock server
+- 🐳 **Docker ready** - Full Docker Compose setup with WireMock 3.13.1
 - ☕ **Java integration** - Optional Java client code generation
+- 🧪 **Live testing** - Test generated endpoints directly from web UI
+- 📦 **Smart packaging** - Download all generated files as ZIP
 
 ## 🚀 Quick Start
 
@@ -52,10 +54,12 @@ make setup
 ```
 
 **Web UI Features:**
-- Drag & drop OpenAPI spec files
-- Real-time generation progress
-- Download generated mappings
-- WireMock server integration
+- 🎨 **Modern interface** - Clean, responsive design with Tailwind CSS
+- 📁 **Drag & drop** - Upload multiple OpenAPI spec files
+- 📊 **Real-time progress** - Live generation status with progress bars
+- 📦 **Smart download** - Download all generated files as ZIP
+- 🧪 **Live testing** - Test endpoints directly from the interface
+- 🔗 **WireMock integration** - Direct connection testing and management
 ### 🐳 Docker & WireMock Server
 
 ```bash
@@ -79,15 +83,23 @@ make install        # Install dependencies
 make generate       # Generate mappings using CLI
 make generate-java  # Generate mappings + Java code
 
-# Web Interface
-make web-dev        # Start web UI locally
+# Development Environment
+make dev-hybrid     # Start WireMock in Docker + Web UI locally
+make web-dev        # Start web UI locally only
 
-# WireMock Service
-make start          # Start WireMock with generated mappings
+# Full Docker Environment  
+make start          # Start all services (Web UI + WireMock)
 make stop           # Stop all services
+make restart        # Restart all services
 
-# Testing
+# Health & Monitoring
+make health         # Check service health
+make logs           # View service logs
+make status         # Show container status
+
+# Testing & Cleanup
 make test           # Test generated endpoints
+make clean          # Clean up all containers and files
 ```
 ## 📁 Project Structure
 
@@ -114,6 +126,31 @@ wiremock-mapping-generator/
 └── 🧪 Testing
     └── tests/                   # Test structure
 ```
+
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| [`README.md`](README.md) | Main project documentation |
+| [`QUICKSTART.md`](QUICKSTART.md) | Quick start guide and common commands |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Detailed architecture and project structure |
+
+## 🔄 Recent Updates (v2.0)
+
+### ✨ What's New
+- **🎨 Enhanced Web UI** - Modern tabbed interface with live testing
+- **🚀 WireMock 3.13.1** - Latest WireMock version with improved performance  
+- **🧹 Codebase Cleanup** - Removed 1,400+ lines of redundant code
+- **⚡ Performance** - Optimized JavaScript and removed debug logging
+- **🔧 Hybrid Development** - Mix Docker and local development modes
+- **📱 Responsive Design** - Mobile-friendly interface
+
+### 🗑️ Cleanup Results
+- Removed legacy `scripts/` directory
+- Consolidated JavaScript files (ui.js → upload.js)
+- Removed redundant templates and debug code
+- Streamlined project structure
+- Enhanced documentation
 
 ## 🎯 Generated Output
 
